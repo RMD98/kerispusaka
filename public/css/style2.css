@@ -1,0 +1,595 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+@import url("https://fonts.googleapis.com/css?family=Inria+Sans:300,700");
+* {
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0px;
+  height: 100%;
+}
+/* a blue color as a generic focus style */
+button:focus-visible {
+  outline: 2px solid #4a90e2 !important;
+  outline: -webkit-focus-ring-color auto 5px !important;
+}
+a {
+  text-decoration: none;
+}
+.box {
+  width: 370px;
+  height: 800px;
+}
+
+.box .mockup {
+    margin-left: 30vw;
+  width: 384px;
+  height: 800px;
+
+}
+
+.box .overlap {
+  position: relative;
+  width: 370px;
+  height: 800px;
+  background-image: url(https://c.animaapp.com/md17hhmsokXFev/img/group-30--1--1.png);
+  background-size: 100% 100%;
+}
+
+.box .overlap-group {
+  position: absolute;
+  width: 224px;
+  height: 36px;
+  top: 96px;
+  left: 26px;
+}
+
+.box .text-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: "Inria Sans", Helvetica;
+  font-weight: 700;
+  color: #1d717b;
+  font-size: 30px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.box .div {
+  position: absolute;
+  width: 103px;
+  height: 44px;
+  top: 12px;
+  left: 78px;
+}
+
+.box .text-wrapper-2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: "Inria Sans", Helvetica;
+  font-weight: 700;
+  color: #1d717b;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.box .text-wrapper-3 {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  font-family: "Inria Sans", Helvetica;
+  font-weight: 700;
+  color: #1d717b;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.box .customer-service {
+  position: absolute;
+  width: 49px;
+  height: 49px;
+  top: 11px;
+  left: 26px;
+  object-fit: cover;
+}
+
+.box .dinas-ketahanan {
+  position: absolute;
+  top: 769px;
+  left: 78px;
+  font-family: "Inria Sans", Helvetica;
+  font-weight: 700;
+  color: #1d717b;
+  font-size: 10px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.box .layanan-pelaporan {
+  position: absolute;
+  width: 317px;
+  top: 132px;
+  left: 26px;
+  font-family: "Inria Sans", Helvetica;
+  font-weight: 700;
+  color: #1d717b;
+  font-size: 15px;
+  text-align: justify;
+  letter-spacing: -0.30px;
+  line-height: normal;
+}
+
+.box .rectangle {
+  position: absolute;
+  width: 95px;
+  height: 5px;
+  top: 91px;
+  left: 0;
+  background-color: #64c3bf;
+}
+
+.box .rectangle-2 {
+  position: absolute;
+  width: 26px;
+  height: 5px;
+  top: 774px;
+  left: 344px;
+  background-color: #64c3bf;
+}
+
+.box .rectangle-3 {
+  position: absolute;
+  width: 75px;
+  height: 5px;
+  top: 774px;
+  left: 0;
+  background-color: #64c3bf;
+}
+
+.box .rectangle-4 {
+  position: absolute;
+  width: 95px;
+  height: 5px;
+  top: 114px;
+  left: 275px;
+  background-color: #64c3bf;
+}
+
+.box .div-wrapper {
+  position: absolute;
+  width: 370px;
+  height: 66px;
+  top: 173px;
+  left: 0;
+  background-color: #64c3bf33;
+}
+
+.box .p {
+  position: absolute;
+  width: 317px;
+  top: 7px;
+  left: 26px;
+  font-family: "Inria Sans", Helvetica;
+  font-weight: 300;
+  color: #1d717b;
+  font-size: 15px;
+  text-align: justify;
+  letter-spacing: -0.30px;
+  line-height: 17px;
+}
+
+.box .overlap-2 {
+  position: absolute;
+  width: 322px;
+  height: 287px;
+  top: 451px;
+  left: 26px;
+}
+
+.box .group {
+  width: 322px;
+  height: 287px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.box .overlap-group-2 {
+  position: relative;
+  width: 320px;
+  height: 287px;
+}
+
+.box .rectangle-5 {
+  position: absolute;
+  width: 317px;
+  height: 287px;
+  top: 0;
+  left: 0;
+  background-color: #1d717b;
+  border-radius: 30px;
+  box-shadow: 0px 4px 4px #00000040;
+}
+
+.box .text-wrapper-4 {
+  position: absolute;
+  width: 131px;
+  top: 148px;
+  left: 189px;
+  font-family: "Inria Sans", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.box .doctor {
+  position: absolute;
+  width: 88px;
+  height: 88px;
+  top: 56px;
+  left: 211px;
+  object-fit: cover;
+}
+
+.box .frame {
+  top: 16px;
+  left: 12px;
+  /* background-image: url(https://c.animaapp.com/md17hhmsokXFev/img/button-4.png); */
+  position: absolute;
+  width: 180px;
+  height: 48px;
+  background-size: 100% 100%;
+  cursor: pointer;
+  border: none;
+  border-bottom-right-radius:20px;
+  border-top-left-radius:25px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.box .frame:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.box .frame:active {
+  transform: scale(0.98);
+}
+
+.box .frame-2 {
+  top: 68px;
+  left: 12px;
+  background-image: url(https://c.animaapp.com/md17hhmsokXFev/img/button-5.png);
+  position: absolute;
+  width: 180px;
+  height: 48px;
+  background-size: 100% 100%;
+  cursor: pointer;
+  border: none;
+  border-bottom-right-radius:20px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.box .frame-2:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.box .frame-2:active {
+  transform: scale(0.98);
+}
+
+.box .frame-3 {
+  top: 120px;
+  left: 12px;
+  background-image: url(https://c.animaapp.com/md17hhmsokXFev/img/button-6.png);
+  position: absolute;
+  width: 180px;
+  height: 48px;
+  background-size: 100% 100%;
+  cursor: pointer;
+  border: none;
+  border-bottom-right-radius:20px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.box .frame-3:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.box .frame-3:active {
+  transform: scale(0.98);
+}
+
+.box .frame-4 {
+  top: 172px;
+  left: 12px;
+  background-image: url(https://c.animaapp.com/md17hhmsokXFev/img/button-7.png);
+  position: absolute;
+  width: 180px;
+  height: 48px;
+  background-size: 100% 100%;
+  cursor: pointer;
+  border: none;
+  border-bottom-right-radius:20px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.box .frame-4:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.box .frame-4:active {
+  transform: scale(0.98);
+}
+
+.box .frame-5 {
+  top: 224px;
+  left: 12px;
+  background-image: url(https://c.animaapp.com/md17hhmsokXFev/img/button-8.png);
+  position: absolute;
+  width: 180px;
+  height: 48px;
+  background-size: 100% 100%;
+  cursor: pointer;
+  border: none;
+  border-bottom-left-radius:25px;
+  border-top-right-radius:20px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.box .frame-5:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.box .frame-5:active {
+  transform: scale(0.98);
+}
+
+.box .overlap-3 {
+  position: absolute;
+  width: 319px;
+  height: 178px;
+  top: 262px;
+  left: 26px;
+}
+
+.box .overlap-wrapper {
+  width: 319px;
+  height: 178px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.box .overlap-4 {
+  position: relative;
+  width: 317px;
+  height: 178px;
+  background-color: #1d717b;
+  border-radius: 30px;
+  box-shadow: 0px 4px 4px #00000040;
+}
+
+.box .administrator {
+  position: absolute;
+  width: 83px;
+  height: 83px;
+  top: 22px;
+  left: 30px;
+  object-fit: cover;
+}
+
+.box .text-wrapper-5 {
+  position: absolute;
+  width: 131px;
+  top: 106px;
+  left: 0;
+  font-family: "Inria Sans", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.box .frame-6 {
+  top: 10px;
+  left: 127px;
+  background-image: url(https://c.animaapp.com/md17hhmsokXFev/img/button.png);
+  position: absolute;
+  width: 180px;
+  height: 48px;
+  background-size: 100% 100%;
+  cursor: pointer;
+  border: none;
+  border-top-right-radius : 25px;
+  border-bottom-left-radius: 20px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.box .frame-6:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.box .frame-6:active {
+  transform: scale(0.98);
+}
+
+.box .frame-7 {
+  top: 64px;
+  left: 127px;
+  background-image: url(https://c.animaapp.com/md17hhmsokXFev/img/button-2.png);
+  position: absolute;
+  width: 180px;
+  height: 48px;
+  background-size: 100% 100%;
+  cursor: pointer;
+  border: none;
+  border-bottom-left-radius: 20px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.box .frame-7:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.box .frame-7:active {
+  transform: scale(0.98);
+}
+
+.box .frame-8 {
+  top: 117px;
+  left: 127px;
+  background-image: url(https://c.animaapp.com/md17hhmsokXFev/img/button-3.png);
+  position: absolute;
+  width: 180px;
+  height: 48px;
+  background-size: 100% 100%;
+  cursor: pointer;
+  border: none;
+  border-top-left-radius:20px;
+  border-bottom-right-radius:25px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.box .frame-8:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.box .frame-8:active {
+  transform: scale(0.98);
+}
+ body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        margin: 0;
+        padding: 2rem;
+      }
+
+      .container-desktop {
+        display: flex;
+        flex-direction: row;
+        gap: 2rem;
+        max-width: 1200px;
+        margin: auto;
+        background: #ffffff;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .welcome-section {
+        flex: 1;
+      }
+
+      .welcome-section h1 {
+        font-size: 2rem;
+        color: #015c63;
+        margin-bottom: 0.5rem;
+      }
+
+      .welcome-section p.subtext {
+        font-weight: bold;
+        color: #444;
+        margin-bottom: 1rem;
+      }
+
+      .welcome-section .info-box {
+        background: #e0f7fa;
+        padding: 1rem;
+        border-radius: 8px;
+        color: #015c63;
+        margin-bottom: 2rem;
+      }
+
+      .card-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .card {
+        background: #028d94;
+        color: white;
+        border-radius: 8px;
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .card .icon {
+        font-size: 2rem;
+        color: #000000;
+      }
+
+      .card .text {
+        font-size: 1.1rem;
+        margin-left: 1rem;
+        color:black
+      }
+
+      .admin-section {
+        background: #006064;
+        border-radius: 8px;
+        padding: 1rem;
+        color: white;
+      }
+
+      .admin-section h3 {
+        margin-bottom: 1rem;
+      }
+
+      .admin-section .admin-contact {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+    .container-custom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .card-custom {
+      background: #0d7377;
+      border-radius: 20px;
+      padding: 30px;
+      color: white;
+      margin-bottom: 20px;
+    }
+    .card-custom h4 {
+      margin-bottom: 20px;
+    }
+    .btn-action {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .option-section {
+      background: teal;
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }

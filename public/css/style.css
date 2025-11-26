@@ -1,0 +1,132 @@
+@import url("https://fonts.googleapis.com/css2?family=Inria+Sans:wght@700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  font-family: 'Inria Sans', sans-serif;
+  background: #f2fdfc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-container {
+  width: 100vw;
+  max-width: 500px;
+  padding: 20px;
+}
+
+.login-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 10vh 50px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Header Icon */
+.circle-top-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #63c3bf;
+  color: white;
+  width: 170px;
+  height: 120px;
+  border-bottom-right-radius: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  text-align: center;
+  padding: 10px;
+}
+
+.logo {
+  width: 75%;
+  margin: 25% auto 10px;
+  display: block;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-label {
+  font-size: 13px;
+  color: #1d717b;
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.input-field {
+  width: 100%;
+  height: 44px;
+  border: 2px solid #64c3bf;
+  border-radius: 30px;
+  padding: 0 16px;
+  font-size: 14px;
+  outline: none;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 16px;
+  top: 36px;
+  color: #1d717b;
+  cursor: pointer;
+}
+
+.forgot-container {
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+.forgot-password {
+  font-size: 13px;
+  color: #1d717b;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.login-button {
+  width: 100%;
+  height: 42px;
+  background-color: #1d717b;
+  border: none;
+  color: white;
+  border-radius: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.top-cloud, .bot-cloud {
+  position: absolute;
+  z-index: 0;
+}
+
+.top-cloud {
+  top: 0;
+  left: 0;
+  width: 50%;
+}
+
+.bot-cloud {
+  bottom: 0;
+  right: 0;
+  width: 50%;
+}
+
+.login-form{
+  margin-bottom: 30%;
+}
