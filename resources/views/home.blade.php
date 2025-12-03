@@ -1,98 +1,120 @@
-@extends('layouts.template')
-  
+@extends('template/app')
+@section('content')
+<main class="main">
+<!-- Services Section -->
+  <section id="services" class="services section">
 
-  @section('content')
-<!-- Content remains unchanged -->
+    <!-- Section Title -->
+    <div class="container section-title" data-aos="fade-up">
+      <span>Our Services<br></span>
+      <h2>Our ServiceS</h2>
+    </div><!-- End Section Title -->
 
+    <div class="container">
 
-  <div class="header">
-    <div class="div">
-            <div class="text-wrapper-3 dropdown no-arrow">
-              <div class="logo-text"><i class="fas fa-comment-dots"></i> Halo!!
-              <a href="#" class="dropdown-toggle"id="userDropdown" role="button"
-                    data-toggle="dropdown">
-                    {{Auth::user()->user_name}}
-              </a>
-              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                    aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2"></i>
-                        Logout
-                    </a>
-                </div>
+      <div class="row gy-4">
+
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+          <div class="card" >
+            <h3>Laporan Umum</h3>
+            <p>Memberikan Laporan atau Pengafuan yang bersifat UMUM terkait peternakan Anda</p>
+            <div class="card-btn">
+              <a href="#" class="btn-primary" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#admin" onclick="showModal('Admin')">LAPOR ADMIN</a>
+            </div>
           </div>
+        </div>
+        <!-- End Card Item -->
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+          <div class="card" >
+            <h3>Permintaan IB</h3>
+            <p>Melakukan Permintaan Inseminasi Buatan (IB) untuk ternakn anda</p>
+            <div class="card-btn">
+              <a href="#" class="btn-primary" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#contactModal" onclick="showModal('IB')">Minta IB</a>
+            </div>
           </div>
         </div>
-    <div class="logo-container">
-      <img src="{{asset('/img/Logo.png')}}" alt="Logo">
-    </div>
-  </div>
-
-  <div class="main">
-    <div class="content">
-      <h1>Selamat Datang !</h1>
-      <p class="desc">Layanan Pelaporan Dinas Ketahanan Pangan, Pertanian & Perikanan</p>
-      <div class="alert-box">
-        Sampaikan laporan terkait pemeriksaan ternak, permintaan IB, dan penanganan penyakit ternak secara cepat dan praktis.
-      </div>
-
-      <div class="option-section">
-        <div class="option-card">
-          <h2><i class="fas fa-user-cog icon"></i> LAPOR ADMIN</h2>
-          <div class="option" onclick="showModal('Admin')"><span><i class="fas fa-file-alt icon"></i> Laporan Umum</span></div>
+        <!-- End Card Item -->
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+          <div class="card" >
+            <h3>Pemeriksaan Kebuntingan</h3>
+            <p>Melakukan permintaan Pengecekan Kebuntingan pada ternak anda</p>
+            <div class="card-btn">
+              <a href="#" class="btn-primary" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#contactModal" onclick="showModal('Kebuntingan')">Perika Kebuntingan</a>
+            </div>
+          </div>
         </div>
-        <div class="option-card">
-          <h2><i class="fas fa-syringe icon"></i> PERMINTAAN IB</h2>
-          <div class="option" onclick="showModal('IB')"><span><i class="fas fa-syringe icon"></i> Tindakan IB</span></div>
-          <div class="option" onclick="showModal('Kebuntingan')"><span><i class="fas fa-stethoscope icon"></i> Cek Kebuntingan</span></div>
+        <!-- End Card Item -->
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+          <div class="card" >
+            <h3>Pemeriksaan Penyakit</h3>
+            <p>Melakukan Laporan dan Permintaan Pemeriksaan Penyakit pada ternak Anda</p>
+            <div class="card-btn">
+              <a href="#" class="btn-primary" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#contactModal" onclick="showModal('Penyakit')">Periksa Penyakit</a>
+            </div>
+          </div>
         </div>
-        <div class="option-card">
-          <h2><i class="fas fa-notes-medical icon"></i> CEK PENYAKIT</h2>
-          <div class="option" onclick="showModal('Penyakit')"><span><i class="fas fa-briefcase-medical icon"></i> Penanganan Penyakit</span></div>
-        </div>
-      </div>
-    </div>
     
-  </div>
-  <div class="main">
+        <div class="modal fade" id="admin" tabindex="-1" aria-labelledby="adminModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="adminModalLabel">Daftar Petugas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+              </div>
+              <div class="modal-body">
+                @foreach($admin as $admin)
+                  <div class="contact">
+                    <a href="#"class="btn-blue" onclick="call('{{ $admin->id_staff }}')">{{ $admin->nama }}</a>
+                  </div>
+                @endforeach
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="constModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="constModalLabel">Daftar Petugas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+              </div>
+              <div class="modal-body">
+                @foreach($data as $staff)
+                  <div class="contact">
+                    <a href="#"class="btn-blue" onclick="call('{{ $staff->id_staff }}')">{{ $staff->nama }}</a>
+                  </div>
+                @endforeach
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Card Item -->
+      </div>
+  </section>
+  <section id="report" class="table section">
 
-    <div class="content">
-      <h1>Daftar Laporan Anda</h1>
-      <div class="overflow-x-auto" id="table">
-        
-      </div>    
-    </div>
-  </div>
-  
-  <div class="modal" id="contactModal">
-    <div class="modal-content">
-      <span class="close-btn" onclick="closeModal()">&times;</span>
-      <h3 id="modalTitle">Daftar Petugas</h3>
-      <div class="contact-list">
-        @foreach($data as $staff)
-          <div class="contact">
-            <a href="#" onclick="call('{{ $staff->id_staff }}')">{{ $staff->nama }}</a>
-          </div>
-        @endforeach
+    <!-- Section Title -->
+    <div class="container section-title" data-aos="fade-up">
+      <span>Daftar Laporan<br></span>
+      <h2>Dafrar Laporan</h2>
+    </div><!-- End Section Title -->
+
+    <div class="container">
+
+      <div class="row gy-4">
+        <div class="overflow-x-auto tbl-report data-tables" id="table">                
+        </div> 
       </div>
-    </div>
-  </div>
-  <div class="modal" id="admin">
-    <div class="modal-content">
-      <span class="close-btn" onclick="closeModal()">&times;</span>
-      <h3 id="modalTitle">Daftar Petugas</h3>
-      <div class="contact-list">
-        @foreach($admin as $admin)
-          <div class="contact">
-            <a href="#" onclick="call('{{ $admin->id_staff }}')">{{ $admin->nama }}</a>
-          </div>
-        @endforeach
-      </div>
-    </div>
-  </div>
-  
-@stop
- 
+    </div>        <!-- End Card Item -->
+  </section>
+</main>
+@endsection
 @push('script')
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
@@ -103,6 +125,7 @@
       dataType:'html',
       success:function(response){
         $('#table').html(response);
+        $('#tck-tbl').DataTable();
       },
       error:function(xhr,status,error){
         console.error('Error fetching ticket table:', error);
@@ -117,14 +140,14 @@
         document.getElementById('contactModal').style.display = 'flex';
       }
       // document.getElementById('contactModal').style.display = 'flex';
-      document.getElementById('modalTitle').innerText = `Petugas untuk ${service}`;
+      // document.getElementById('modalTitle').innerText = `Petugas untuk ${service}`;
       activeService = service;
     }
     function closeModal() {
       if(activeService=='Admin') {
-        document.getElementById('admin').style.display = 'none';
+        $('#admin').modal('hide');
       } else {
-        document.getElementById('contactModal').style.display = 'none';
+        $('#contactModal').modal('hide');
       }
       // document.getElementById('contactModal').style.display = 'none';
     }
