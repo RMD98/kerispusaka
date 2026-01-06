@@ -47,30 +47,26 @@
 
 </head>
 <body id="page-top">
-    <header>
+    <div id="wrapper">
         @if(Auth::user()->role == 'peternak')
-            
         @else
-            @include('layouts/navbar')
-        @endif
-    </header>
-    @if(Auth::user()->role == 'peternak')
-            @yield('content')
-    @else
-        <div id="wrapper">
-            <div id="content-wrapper" class="d-flex flex-column">
-                <div class="flex min-h-screen">    
-                <aside class="w-64 bg-white shadow-md px-4 py-6 flex flex-col">
-                    <h2 class="text-2xl font-bold text-blue-600 mb-6">My App</h2>
-                    @include('layouts.sidebar')
-                </aside>
-                <!-- <div id="content"> -->
-                    <!-- </div> -->
-                    @yield('content')
-                </div>
+        <aside class="w-64 bg-white shadow-md py-6 flex flex-col navbar-nav sidebar sidebar-dark accordion">
+            <h2 class="text-2xl font-bold text-blue-600 mb-6 pl-4">My App</h2>
+            @include('layouts.sidebar')
+        </aside>
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div class="flex min-h-screen">    
+                    <header>
+                        
+                        @include('layouts/navbar')
+                    </header>   
+                @endif
+                
+                        @yield('content')
+             
             </div>
         </div>
-        @endif
+    </div>
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>

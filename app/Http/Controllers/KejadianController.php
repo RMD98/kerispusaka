@@ -107,7 +107,6 @@ class KejadianController extends Controller
             'created_at' => $request->tanggal,
             'status' => $request->status,
         ];
-        // dd($newRowData);
         // $request->validate([
         //     'jantan' => 'required|string|max:255',
         //     'betina' => 'required|email|max:255',
@@ -129,68 +128,7 @@ class KejadianController extends Controller
             $newRowData['id_kejadian'] = "{$prefix}-{$year}-{$nextNumber}";
         };
         DB::table('kejadian')->insert($newRowData);
-        // $file = $this->gdrive->findFileByNameInFolder();
-
-        // $sheetData = $this->read($file);
-        // $spreadsheet = $sheetData['spreadsheet'];
-        // $sheet = $sheetData['sheet'];
-        // $localPath = $sheetData['localPath'];
-        // $file = $sheetData['file'];
-
-        // // Get the existing data and headers
-        // $rows = $sheet->toArray();
-        // $headers = array_map('strtolower', $rows[0]); // Convert headers to lowercase for consistency
-
     
-       
-       
-        // //  Find max numeric part from existing IDs
-        // $maxNumber = 0;
-        // if (in_array('id_kejadian', $headers)) {
-        //     $idColIndex = array_search('id_kejadian', $headers);
-        //     foreach ($rows as $i => $row) {
-        //         if ($i === 0) continue;
-        //         $id = $row[$idColIndex] ?? '';
-        //         if (preg_match('/' . $prefix . '-' . $year . '-(\d+)/', $id, $matches)) {
-        //             $num = (int) $matches[1];
-        //             if ($num > $maxNumber) {
-        //                 $maxNumber = $num;
-        //             }
-        //         }
-        //     }
-
-        //     // Generate next custom ID
-        //     $nextNumber = str_pad($maxNumber + 1, $padLength, '0', STR_PAD_LEFT);
-        //     $customId = "{$prefix}-{$year}-{$nextNumber}";
-        //     $newRowData['id_kejadian'] = $customId;
-        // }
-
-        // // Map the new row data to match the spreadsheet headers
-        // $newRow = [];
-        // foreach ($headers as $header) {
-        //     $newRow[] = $newRowData[$header] ?? ''; // Use blank if the header is not in the request
-        // }
-
-        // // Append the new row to the next available row
-        
-        //  $lastRow = count($rows) + 1;;
-        // // foreach ($rows as $i => $row) {
-        // //     if ($i === 0) continue; // Skip header row
-        // //     if (array_filter($row)) {
-        // //         $lastRow = $i + 2;
-        // //     }
-        // // }
-        // foreach ($newRow as $columnIndex => $value) {
-        //     $sheet->setCellValueByColumnAndRow($columnIndex + 1, $lastRow, $value);
-        // }
-        // // dd($newRowData);
-
-        // // Step 7: Save and upload back
-        // $writer = new Xlsx($spreadsheet);
-        // $writer->save($localPath);
-
-        // $this->gdrive->uploadOrUpdateFile($localPath, $file->name);
-
         
 
         return redirect('/kejadian')->with('success', 'Data Kejadian Berhasil Ditambahkan');
@@ -247,6 +185,9 @@ class KejadianController extends Controller
     public function edit(string $id)
     {
         //
+        $data = DB::table('kejadian')->where('id_kejadian', $id)
+                ->join('betina','kejadian.id_betina','ear_tag')->first();
+        return view('kejadian.edit_kejadian', compact('data'));
     }
 
     /**
@@ -255,6 +196,15 @@ class KejadianController extends Controller
     public function update(Request $request, string $id)
     {
         //
+         $newRowData = [
+            'id_peternak' => $request->peternak,
+            'id_betina' => $request->betina,
+            'created_at' => $request->tanggal,
+            'status' => $request->status,
+            'updated_at' => Carbon::now(),
+        ];
+        DB::table('kejadian')->where('id_kejadian', $id)->update($newRowData);
+        return redirect('/kejadian')->with('success', 'Data Kejadian Berhasil Diubah');
     }
 
     /**

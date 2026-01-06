@@ -38,7 +38,7 @@
                         <td class="px-4 py-2 border-b">
                             <a href="{{route('kejadian.show',$value->id_kejadian)}}" class="text-green-600 hover:underline">Detail</a>
                             |
-                            <a href="" class="text-blue-600 hover:underline">Edit</a>
+                            <a href="{{route('kejadian.edit',$value->id_kejadian)}}" class="text-blue-600 hover:underline">Edit</a>
                             |
                             <form action="{{route('kejadian.destroy',$value->id_kejadian)}}" method="POST" class="inline">
                                 @csrf

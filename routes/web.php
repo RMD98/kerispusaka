@@ -68,6 +68,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/add_kejadian',[KejadianController::class,'create'])->name('kejadian.create');
         Route::post('/add_kejadian',[KejadianController::class,'store'])->name('kejadian.store');
         Route::delete('/kejadian/{id}',[KejadianController::class,'destroy'])->name('kejadian.destroy');
+        Route::get('/edit_kejadian/{id}',[KejadianController::class,'edit'])->name('kejadian.edit');
+        Route::post('/edit_kejadian/{id}',[KejadianController::class,'update'])->name('kejadian.update');
         
         Route::get('/ib',[IbController::class,'index'])->name('ib.index');
         Route::get('/ib/search',[IbController::class,'search'])->name('ib.search');
