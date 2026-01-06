@@ -78,7 +78,7 @@
                 placeholder: 'Cari Kejadian...',
                 minimumInputLength: 0,
                 ajax: {
-                    url: '/kejadian/search',
+                    url: '{{route('kejadian.search')}}',
                     dataType: 'json',
                     delay: 250,
                     data: function (params) {
@@ -102,7 +102,7 @@
             placeholder: 'Cari Staff...',
             minimumInputLength: 0,
             ajax: {
-                url: '/staff/search',
+                url: '{{route('staff.search')}}',
                 dataType: 'json',
                 delay: 250,
                 data: function (params) {
@@ -125,7 +125,7 @@
             placeholder: 'Cari pkb...',
             minimumInputLength: 0,
             ajax: {
-                url: '/pkb/search',
+                url: '{{route('pkb.search')}},
                 dataType: 'json',
                 delay: 250,
                 data: function (params) {

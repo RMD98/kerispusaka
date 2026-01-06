@@ -93,7 +93,7 @@ $(document).ready(function() {
         placeholder: 'Cari peternak...',
         minimumInputLength: 0,
         ajax: {
-            url: '/peternak/search',
+            url: '{{route('peternak.search')}}',
             dataType: 'json',
             delay: 250,
             data: function (params) {

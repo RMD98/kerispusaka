@@ -19,7 +19,6 @@
                     <th class="px-4 py-2 border-b">Id</th>
                     <th class="px-4 py-2 border-b">Nama</th>
                     <th class="px-4 py-2 border-b">Telepon</th>
-                    <th class="px-4 py-2 border-b">Surat Izin</th>
                     <th class="px-4 py-2 border-b">Asal</th>
                     <th class="px-4 py-2 border-b">Actions</th>
                 </tr>
@@ -31,7 +30,6 @@
                         <td class="px-4 py-2 border-b">{{ $value->id_staff }}</td>
                         <td class="px-4 py-2 border-b">{{ $value->nama }}</td>
                         <td class="px-4 py-2 border-b">{{ $value->no_hp }}</td>
-                        <td class="px-4 py-2 border-b">{{ $value->surat_izin }}</td>
                         <td class="px-4 py-2 border-b">{{ $value->asal }}</td>
                         <td class="px-4 py-2 border-b">
                             

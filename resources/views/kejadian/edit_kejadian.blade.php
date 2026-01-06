@@ -61,7 +61,7 @@ $(document).ready(function() {
         placeholder: 'Cari Peternak...',
         minimumInputLength: 0,
         ajax: {
-            url: '/peternak/search',
+            url: '{{route('peternak.search')}}',
             dataType: 'json',
             delay: 250,
             data: function (params) {
@@ -85,7 +85,7 @@ $(document).ready(function() {
         placeholder: 'Cari Betina...',
         minimumInputLength: 0,
         ajax: {
-            url: '/betina/search',
+            url: '{{route('betina.search')}}',
             dataType: 'json',
             delay: 250,
             data: function (params) {
