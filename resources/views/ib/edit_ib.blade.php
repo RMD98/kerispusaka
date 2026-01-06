@@ -86,7 +86,7 @@ $(document).ready(function() {
         placeholder: 'Cari Pejantan...',
         minimumInputLength: 0,
         ajax: {
-            url: '/pejantan/search',
+            url: '{{route('pejantan.search')}}',
             dataType: 'json',
             delay: 250,
             data: function (params) {
@@ -109,7 +109,7 @@ $(document).ready(function() {
         placeholder: 'Cari Staff...',
         minimumInputLength: 0,
         ajax: {
-            url: '/staff/search',
+            url: '{{route('staff.search')}}',
             dataType: 'json',
             delay: 250,
             data: function (params) {
