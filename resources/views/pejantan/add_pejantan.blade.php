@@ -3,7 +3,7 @@
 <div class="bg-white w-full shadow rounded-2xl p-4">
     {{-- Card Header --}}
     <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-semibold text-gray-800">List Pejantan</h3>
+        <h3 class="text-xl font-semibold text-gray-800">Add Pejantan</h3>
     </div>
 
     {{-- Form --}}
@@ -42,7 +42,7 @@
             <div class="pt-4">
                 <button type="submit"
                         class="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition">
-                    Save User
+                    Save Pejantan
                 </button>
             </div>
         </form>

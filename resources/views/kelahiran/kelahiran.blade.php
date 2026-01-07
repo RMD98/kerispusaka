@@ -4,9 +4,9 @@
     {{-- Card Header --}}
     <div class="flex items-center justify-between mb-4">
         <h3 class="text-xl font-semibold text-gray-800">Daftar Inseminasi Buatan</h3>
-        <a href="/add_kebuntingan"
+        <a href="{{route('kelahiran.create')}}"
            class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
-            + Add User
+            + Add Kelahiran
         </a>
     </div>
 

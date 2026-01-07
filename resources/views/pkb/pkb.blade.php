@@ -4,9 +4,9 @@
     {{-- Card Header --}}
     <div class="flex items-center justify-between mb-4">
         <h3 class="text-xl font-semibold text-gray-800">Daftar Pemeriksaan Kebuntingan</h3>
-        <a href="/add_pkb"
+        <a href="{{route('pkb.create')}}"
            class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
-            + Add User
+            + Add PKB
         </a>
     </div>
 
