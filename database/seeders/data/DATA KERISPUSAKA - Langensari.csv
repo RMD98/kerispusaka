@@ -1,0 +1,85 @@
+No,Nama Peternak,No Telepon,Desa,Jenis Ternak,username,password
+1,ARIF SARIFUDIN,,MUKTISARI,SAPI,arif_muktisari,arif.muktisari
+2,BADRUDIN,085314133214,KUJANGSARI,SAPI,badrudin_kujangsari,badrudin.kujangsari
+3,AHMAD JAELANI,,WARINGINSARI,SAPI,ahmad_waringinsari,ahmad.waringinsari
+4,BUSROH,82130219196,REJASARI,SAPI,busroh_rejasari,busrho.rehasari
+5,DARMIN,082116923797,KUJANGSARI,SAPI,darmin_kujangsari,darmin.kujangsari
+6,DURMAN,85685219632,BOJONGKANTONG,SAPI,durman_bojongkantong,durman.bojongkantong
+7,EDY SUKARDI,82215222129,WARINGINSARI,SAPI,edy_waringinsari,edy.waringinsari
+8,ELA KONITIN,87792084457,BOJONGKANTONG,SAPI,ela_bojongkantong,ela.bojongkantong
+9,ERIN,082119796679,REJASARI,SAPI,erin_rejasari,erin.rejasari
+10,H MARKUM,81222192115,LANGENSARI,SAPI,markum_langensari,markum.langensari
+11,HADIYANTO,,REJASARI,SAPI,hadiyanto_rejasari,hadiyanto.rejasari
+12,HASBULOH,81313056040,KUJANGSARI,SAPI,hasbuloh_kujangsar,hasbuloh.kujangsari
+13,HASIM,081770888530,KUJANGSARI,SAPI,hasim_kujangsari,hasim.kujangsari
+14,IRSYADUL IBAD,87739850993,WARINGINSARI,SAPI,iryadul_waringinsari,irsyadul.waringinsari
+15,JAFAR,85223965123,REJASARI,SAPI,jafar_rejasari,jafar.rejasari
+16,JOKO SUKO,87728967818,LANGENSARI,SAPI,joko_langensari,joko.langensari
+17,KADARISMAN,081323309776,LANGKAP,SAPI,kadarisman_langkap,kadarisman.langkap
+18,KARIMUN,81214196068,REJASARI,SAPI,karimun_rejasari,karimun.rejasari
+19,KARJO,82217747173,BOJONGKANTONG,SAPI,karjo_bojongkantong,karjo.bojongkantong
+20,MAMAN SALMAN,085223895205,REJASARI,SAPI,maman_rejasari,maman.rejasari
+21,MARJO,082263131666,WARINGINSARI,SAPI,marjo_waringinsari,marjo.waringinsari
+22,MUAJI,82240980984,WARINGINSARI,SAPI,muaji_warigingsari,muaji.waringinsari
+23,DEMAN,0895364750103,KUJANGSARI,SAPI,deman_kujangsari,deman.kujangsari
+24,OPIK HANAPI,,REJASARI,SAPI,opik_rejasari,opik.rejasari
+25,PAIMUN,085156120011,REJASARI,SAPI,paimun_rejasari,paimun.rejasari
+26,PARMAN,,KUJANGSARI,SAPI,parman_kujangsari,parman.kujangsari
+27,ROHIMAT,81283167763,REJASARI,SAPI,rohimat_rejasari,rohimat.rejasari
+28,SAUJI,89620881395,BOJONGKANTONG,SAPI,sauji_bojongkantong,sauji.bojongkantong
+29,SOBIRIN,85872007253,BOJONGKANTONG,SAPI,sobirin_bojongkantong,sobirin.bojongkantong
+30,SOHIDIN,085294979030,MUKTISARI,SAPI,sohidin_muktisari,sohidin.muktisari
+31,SURYANA,081914585816,LANGENSARI,DOMBA,suryana_langensari,suryana.muktisari
+32,SUTONO,082216883127,LANGENSARI,SAPI,sutono_langensari,sutono.langensari
+33,TRIATNO (YAYAT),82317182224,WARINGINSARI,SAPI,triatno_waringinsari,triatno.waringinsari
+34,TURIMAN,82316165549,KUJANGSARI,SAPI,turiman_kujangsari,turiman.kujangsari
+35,TURMANTO,82317817909,LANGENSARI,SAPI,turmanto_langensari,turmanto.langensari
+36,WAGIMAN,085320109201,BOJONGKANTONG,SAPI,wagiman_bojongkantong,wagiman.bojongkantong
+37,PARNO,081312572230,KUJANGSARI,SAPI,parno_kujangsari,parno.kujangsari
+38,MUHTAR,083185020869,KUJANGSARI,SAPI,muhtar_kujangsari,muhtar.kujangsari
+39,ATENG,083198173469,KUJANGSARI,SAPI,ateng_kujangsari,ateng.kujangsari
+40,KADIKIN,089608961997,KUJANGSARI,SAPI,kadikin_kujangsari,kadikin.kujangsari
+41,ABDUL KHOLIQ,082118992510,REJASARI,SAPI,abdul_rejasari,abdul.rejasari
+42,MUHIDIN,089638499993,REJASARI,SAPI,muhidin_rejasari,muhidin.rejasari
+43,FERI,081563943490,BOJONGKANTONG,SAPI,feri_bojongkantong,feri.bojongkantong
+44,PAINO,085728715830,BOJONGKANTONG,SAPI,paino_bojongkantong,paino.bojongkantong
+45,ANWAR/TOFA,082117628560,KUJANGSARI,SAPI,anwar_kujangsari,anwar.kujangsari
+46,TOPIK,0895416132312,BOJONGKANTONG,SAPI,topil_bojongkantong,topik.bojongkantong
+47,AGUSTINUS,,BOJONGKANTONG,SAPI,agustinus_bojongkantong,agustinus.bojongkantong
+48,DEDE SUPARDI,85729567706,WARINGINSARI,SAPI,dede_waringinsari,dede.waringinsari
+49,SUMARDI,81214064224,KUJANGSARI,SAPI,sumardi_kujangsari,sumardi.kujangsari
+50,TARYONO,,WARINGINSARI,SAPI,taryono_waringinsari,taryono.waringinsari
+51,SIMIN,81323021043,WARINGINSARI,SAPI,simin_waringinsari,simin.waringinsari
+52,LATIP (KAMBING BAROKAH),0895370500555,KUJANGSARI,DOMBA,latip_kujangsari,latip.kujangsari
+53,YANTO (KRIDA UTAMA),081323452594,BOJONGKANTONG,DOMBA,yanto_bojongkantong,yanto.bojongkantong
+54,MUSTANGIN (GEMA PERJAYA),081214065650,BOJONGKANTONG,DOMBA,mustingin_bojongkanton,mustingin.bojongkantong
+55,SUMARJONO (SAMPIH MAKMUR JAYA),082316463588,REJASARI,DOMBA,sumarjo_rejasari,sumarjo.rejasari
+56,MULYADI (HARAPAN BARU),081312821431,REJASARI,DOMBA,mulyadi_rejasari,mulyadi.rejasari
+57,MUSLIHUDIN (SUBUR MAKMUR),085624504879,WARINGINSARI,DOMBA,muslihudin_waringinsari,muslihudin.waringinsari
+58,SADIRIN (TANI MAJU MAKMUR),085724263632,KUJANGSARI,DOMBA,sadirin_kujangsari,sadirin.kujangsari
+59,MUSON FARID (TANI SUMBER REZEKI),085393409381,WARINGINSARI,DOMBA,muson_waringinsari,muson.waringinsari
+60,RIYANTO (TANI TUNGGAK SEMI),089678910819,WARINGINSARI,DOMBA,riyanto_waringinsari,riyanto.waringinsari
+61,SUMINARDI (TANI MAJU BERSAMA),08112074051,REJASARI,KAMBING,suminardi_rejasari,suminardi.rejasari
+62,HASBULOH (TERNAK KAMBING BAROKAH),082295191011,KUJANGSARI,KAMBING,hasbulohB_kujangsar,hasbulohB.kujangsari
+63,PURWANTO (WASIT),082321014532,WARINGINSARI,KAMBING,purwanto_waringinsari,purwanto.waringinsari
+64,SARIKIN (TANI KALAPASABRANG),081323247140,KUJANGSARI,KAMBING,sarikin_kujangsari,sarikin.kujangsari
+65,DODO KUSWANTO (TANI MARGO UTOMO),081322363393,WARINGINSARI,KAMBING,dodo_waringinsari,dodo.waringinsari
+66,NASRUDIN (TANI MEKARJAYA),087826317444,WARINGINSARI,KAMBING,nasrudin_waringinsari,nasrudin.waringinsari
+67,MASITOH,085860656383,BOJONGKANTONG,DOMBA,masitoh_bojongkantong,masitoh.bojongkantong
+68,WAHYU ADAM,081312555927,KUJANGSARI,SAPI,wahyu_kujangsari,wahyu.kujangjsari
+69,MARYAM UBAY,089658117888,REJASARI,DOMBA,maryam_rejasari,maryam.rrejasari
+70,RUBANGI,0895619031691,KUJANGSARI,SAPI,rubangi_kujangsari,rubangi.rejasari
+71,NURWAHID,085322470513,BOJONGKANTONG,SAPI,nurwahid_bojongkantong,nurwahid.bojongkantong
+72,AGUS,089655088906,CITANGKOLO,SAPI,agus_citangkolo,agus.citangkolo
+73,DARMAN,087822952416,REJASARI,SAPI,darman_rejasri,darman.rejasari
+74,LILI,0895370513040,REJASARI,KAMBING,lili_rejasari,lili.rejasari
+75,MIN,089603019959,BOJONGKANTONG,SAPI,min_bojongkantong,min.bojongkantong
+76,MUHTADIN,085860303625,KUJANGSARI,SAPI,muhtadin_kujangsari,muhtadi.kujangsari
+77,PAIMAN,081215130916,KALAPA SABRANG,SAPI,paiman_sabrang,paiman.sabrang
+78,SAKIR,087822120283,CITANGKOLO,SAPI,sakir_citangkolo,sakir.citangkolo
+79,TRIONO,08979569567,KUJANGSARI,SAPI,triono_kujangsari,triono.kujangsari
+80,YOYO SUBAGIO,089668102885,REJASARI,DOMBA,yoyo_rejasari,yoyo.rejasari
+81,UDI,089657880138,REJASARI,DOMBA,udi_rejasari,udi.rejasari
+82,USEP,087729939876,REJASARI,DOMBA,usep_rejasari,usep.rejasari
+83,NENDAH,089644573317,BOJONGKANTONG,SAPI,nendah_bojongkantong,nendah.bojongkantong
+84,ZULFA (MAS TOFA),0895352274777,BOJONGKANTONG,SAPI,zulfa_bojongkantong,zulfa.bojongkantong

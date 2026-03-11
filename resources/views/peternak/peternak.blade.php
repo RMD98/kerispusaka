@@ -1,9 +1,15 @@
 @extends('layouts.template')
 @section('content')
+
 <div class="bg-white w-full shadow rounded-2xl p-4">
     {{-- Card Header --}}
     <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-semibold text-gray-800">Daftar Peternak</h3>
+        <div>
+
+            <h3 class="text-xl font-semibold text-gray-800">Daftar Peternak</h3>
+            <x-breadcrumb />
+
+        </div>
         <a href="{{route('peternak.create')}}"
            class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
             + Add Peternak
@@ -12,14 +18,17 @@
 
     {{-- Table --}}
     <div class="overflow-x-auto">
-        <table class="min-w-full text-sm text-left text-gray-700 border rounded">
+        <table id="table" class="display">
             <thead class="bg-gray-100 text-xs uppercase font-semibold text-gray-600">
                 <tr>
                     <th class="px-4 py-2 border-b">#</th>
                     <th class="px-4 py-2 border-b">Id</th>
                     <th class="px-4 py-2 border-b">Name</th>
                     <th class="px-4 py-2 border-b">Alamat</th>
+                    <th class="px-4 py-2 border-b">Kelurahan</th>
+                    <th class="px-4 py-2 border-b">Kecamatan</th>
                     <th class="px-4 py-2 border-b">Telepon</th>
+                    <th class="px-4 py-2 border-b">Jenis Ternak</th>
                     <th class="px-4 py-2 border-b">Actions</th>
                 </tr>
             </thead>
@@ -30,7 +39,10 @@
                         <td class="px-4 py-2 border-b">{{ $value->id_peternak }}</td>
                         <td class="px-4 py-2 border-b">{{ $value->nama }}</td>
                         <td class="px-4 py-2 border-b">{{ $value->alamat }}</td>
+                        <td class="px-4 py-2 border-b">{{ $value->kelurahan }}</td>
+                        <td class="px-4 py-2 border-b">{{ $value->kecamatan }}</td>
                         <td class="px-4 py-2 border-b">{{ $value->no_hp }}</td>
+                        <td class="px-4 py-2 border-b">{{ $value->jenis_ternak }}</td>
                         <td class="px-4 py-2 border-b">
                             <a href="{{route('peternak.edit',$value->id_peternak)}}" class="text-blue-600 hover:underline">Edit</a>
                             |
@@ -42,12 +54,23 @@
                         </td>
                     </tr>
                 @endforeach
-                    <!-- <tr>
-                        <td colspan="4" class="px-4 py-4 text-center text-gray-500">No users found.</td>
-                    </tr> -->
+                <!-- <tr>
+                    <td colspan="4" class="px-4 py-4 text-center text-gray-500">No users found.</td>
+                </tr> -->
             </tbody>
         </table>
     </div>
 </div>
 
 @stop
+@push('script')
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdn.datatables.net/2.3.6/js/dataTables.js"></script>
+<script>
+    new DataTable('#table',{
+         info: false,
+         ordering: true,
+         paging: true
+    });
+</script>
+@endpush

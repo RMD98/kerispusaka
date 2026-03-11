@@ -55,7 +55,7 @@ class KejadianController extends Controller
         // ];
     }
 
-    public function index()
+    public function index(Request $request)
     {
         //
         if(auth()->user()->role == 'peternak'){
@@ -64,25 +64,18 @@ class KejadianController extends Controller
                     ->join('peternak','betina.id_peternak','peternak.id_peternak')
                     ->where('peternak.id_peternak','=',auth()->user()->id_user)
                     ->select('kejadian.*')
-                    ->get();
+                    ->paginate(10);
         }elseif(auth()->user()->role == 'super admin'){
-            $data = DB::table('kejadian')->get();
+            $data = DB::table('kejadian')->paginate(10);
         }
-        // if(!file_exists(dirname($file['path']))){
-            // mkdir(dirname($file['path']), 0755, true);
-            // }
-        // $file = $this->gdrive->findFileByNameInFolder();
-        // $this->gdrive->downloadExcelFile($file['file']->id,$file['path']);
-        // $excel = $this->read($file);
-        // $rows = $excel['sheet']->toArray();
-        // $headers = array_map('strtolower', $rows[0]); // convert to lowercase for consistency
+       
+          if ($request->expectsJson()) {
 
-        // $data = [];
-
-        // foreach (array_slice($rows, 1) as $row) {
-        //     $data[] = array_combine($headers, $row);
-        // }
-        // dd($data);
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ]);
+        };
         return view('kejadian.kejadian',compact('data'));
     }
 
@@ -113,22 +106,38 @@ class KejadianController extends Controller
         //     'tanggal' => 'required|string|max:255',
         //     'status' => 'required|string|max:15',
         // ]);
-        $prefix = 'KEJADIAN';
-        $year = Carbon::now()->format('Y');
+        $prefix = 'Kejadian';
+        $year = Carbon::now()->format('y.m');
         $padLength = 4;
 
         $count = DB::table('kejadian')->count();
         if($count == 0){
-            $newRowData['id_kejadian'] = "{$prefix}-{$year}-0001";
+            $newRowData['id_kejadian'] = "{$prefix}-{$year}.001";
         }else{
             $lastRow = DB::table('kejadian')->orderBy('id_kejadian', 'desc')->first();
             $lastId = $lastRow->id_kejadian;
-            $lastNumber = (int) substr($lastId, strrpos($lastId, '-') + 1);
-            $nextNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
-            $newRowData['id_kejadian'] = "{$prefix}-{$year}-{$nextNumber}";
+            if(substr($lastId,strrpos($lastId,'-')+1,5)!=$year){
+                $id = ['id_kejadian' => "{$prefix}-{$year}.001"];
+            } else{
+                $number = sprintf("%03d",substr($lastId, strrpos($lastId,'-')+5)+1);
+                $id = ['id_kejadian' => "{$prefix}-{$year}.{$number}"];
+            }
+            $newRowData = array_merge($id,$newRowData);
         };
         DB::table('kejadian')->insert($newRowData);
-    
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'create',
+            'table'       => 'kejadian',
+            'primary_key' => $newRowData['id_kejadian'],
+            'row'         => $newRowData,
+        ]);
+        if ($request->expectsJson()) {
+
+                return response()->json([
+                    'status' => 'success',
+                    'data' => $newRowData
+                ]);
+            };
         
 
         return redirect('/kejadian')->with('success', 'Data Kejadian Berhasil Ditambahkan');
@@ -199,21 +208,48 @@ class KejadianController extends Controller
          $newRowData = [
             'id_peternak' => $request->peternak,
             'id_betina' => $request->betina,
+            'id_ticket' => $request->ticket,
             'created_at' => $request->tanggal,
             'status' => $request->status,
             'updated_at' => Carbon::now(),
         ];
         DB::table('kejadian')->where('id_kejadian', $id)->update($newRowData);
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'update',
+            'table'       => 'kejadian',
+            'primary_key' => 'id_kejadian',
+            'row'         => array_merge(['id_kejadian' => $id], $newRowData)
+        ]);
+        if ($request->expectsJson()) {
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $newRowData
+            ]);
+        };
         return redirect('/kejadian')->with('success', 'Data Kejadian Berhasil Diubah');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id, Request $request)
     {
         //
         DB::table('kejadian')->where('id_kejadian', $id)->delete();
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'delete',
+            'table'       => 'kejadian',
+            'primary_key' => 'id_kejadian',
+            'row'  => ['id_kejadian' => $id],
+        ]);
+        if ($request->expectsJson()) {
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $id
+            ]);
+        };
         return redirect('/kejadian')->with('success', 'Data Kejadian Berhasil Dihapus');
     }
 }

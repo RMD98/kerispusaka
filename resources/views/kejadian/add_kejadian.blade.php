@@ -3,14 +3,24 @@
 <div class="bg-white w-full shadow rounded-2xl p-4">
     {{-- Card Header --}}
     <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-semibold text-gray-800">Buat Kejadian</h3>
+        <div>
+
+            <h3 class="text-xl font-semibold text-gray-800">Buat Kejadian</h3>
+            <x-breadcrumb />
+
+        </div>
     </div>
 
     {{-- Table --}}
     <div class="overflow-x-auto">
     <form action="" method="POST" class="flex-1 overflow-auto space-y-6">
                 @csrf
-
+                
+                <!-- <div>
+                    <label for="peternak" class="block text-sm font-medium text-gray-700">Peternak</label>
+                    <input type="text" name="peternak" id="peternak" required readonly
+                        class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
+                </div> -->
 
                 <div>
                     <label for="peternak" class="block text-sm font-medium text-gray-700">Id Peternak</label>
@@ -105,7 +115,7 @@ $(document).ready(function() {
             cache: true
         },
     });
-
+    
 });
 </script>
 

@@ -21,59 +21,19 @@ class IbController extends Controller
     public function __construct(GDriveExcelService $gdrive){
         $this->gdrive = $gdrive;
     }
-    public function read($file){
-        // $filename = 'Date.xlsx';
-        
-        // if(empty($result)){
-        //     return response()->json(['error' =>'File Not Found']);
-        // }
 
-        // $file = $result[0];
-        // $localPath = storage_path("app/temp/{$file->name}");
-
-        // if(!file_exists(dirname($localPath))){
-        //     mkdir(dirname($localPath), 0755, true);
-        // }
-
-        // $this->gdrive->downloadExcelFile($file->id,$localPath);
-        // dd($file['path']);
-        // $content = Excel::toArray([],$file['path']);
-        // $content = IOFactory::load($file['path']);
-        // $sheet = $content->getSheetByName('staff');
-        // $data = $sheet->toArray();
-        // return response()->json([
-            //     'file' => $file['file']->name,
-            //     'content' => $data,
-            //     'sheet' => $sheet,
-            // ]);
-        // $content = IOFactory::load($file['path']);
-        // return[
-        //     'spreadsheet' => $content,
-        //     'sheet' => $content->getSheetByName('ib'),
-        //     'localPath' => $file['path'],
-        //     'file' => $file['file'],
-        // ];
-    }
-
-    public function index()
+    public function index(Request $request)
     {
         //
-        $data = DB::table('ib')->get();
-        // if(!file_exists(dirname($file['path']))){
-            // mkdir(dirname($file['path']), 0755, true);
-            // }
-        // $file = $this->gdrive->findFileByNameInFolder();
-        // $this->gdrive->downloadExcelFile($file['file']->id,$file['path']);
-        // $excel = $this->read($file);
-        // $rows = $excel['sheet']->toArray();
-        // $headers = array_map('strtolower', $rows[0]); // convert to lowercase for consistency
+        $data = DB::table('ib')->paginate(10);
+     
+          if ($request->expectsJson()) {
 
-        // $data = [];
-
-        // foreach (array_slice($rows, 1) as $row) {
-        //     $data[] = array_combine($headers, $row);
-        // }
-        // dd($data);
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ]);
+        };
         return view('ib.ib',compact('data'));
     }
 
@@ -95,6 +55,7 @@ class IbController extends Controller
         $newRowData = [
             'id_kejadian' => $request->kejadian,
             'id_staff' => $request->staff,
+            'id_ticket' => $request->ticket,
             'pejantan' => $request->pejantan,
             'no_dokumen' => $request->dokumen,
             'hasil' => $request->status,
@@ -108,47 +69,62 @@ class IbController extends Controller
             'pejantan' => 'required|string|max:255',
             'tanggal' => 'required|string|max:15',
         ]);
-        // dd($newRowData);
-        // $file = $this->gdrive->findFileByNameInFolder();
 
-        // $sheetData = $this->read($file);
-        // $spreadsheet = $sheetData['spreadsheet'];
-        // $sheet = $sheetData['sheet'];
-        // $localPath = $sheetData['localPath'];
-        // $file = $sheetData['file'];
-
-        // // Get the existing data and headers
-        // $rows = $sheet->toArray();
-        // $headers = array_map('strtolower', $rows[0]); // Convert headers to lowercase for consistency
-
-    
         $prefix = 'IB';
-        $year = Carbon::now()->format('Y');
+        $year = Carbon::now()->format('y.m');
         $padLength = 4;
         $count = DB::table('ib')->count();
         if($count == 0){
-            $newRowData['id_ib'] = "{$prefix}-{$year}-0001";
+            $newRowData['id_ib'] = "{$prefix}-{$year}.001";
         }else{
             $lastRow = DB::table('ib')->orderBy('id_ib', 'desc')->first();
             $lastId = $lastRow->id_ib;
-            $lastNumber = (int) substr($lastId, strrpos($lastId, '-') + 1);
-            $nextNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
-            $newRowData['id_ib'] = "{$prefix}-{$year}-{$nextNumber}";
+            if(substr($lastId,2,5)!=$year){
+                $id = ['id_ib' => "{$prefix}-{$year}.001"];
+            } else{
+                $number = sprintf("%03d",substr($lastId, 7)+1);
+                $id = ['id_ib' => "{$prefix}-{$year}.{$number}"];
+            }
+            $newRowData = array_merge($newRowData, $id);
+            
         };
-        DB::table('ib')->insert($newRowData);
-       
-        $statusToSet = $request->status;
-        if (strtolower($newRowData['hasil']) === 'sukses') {
-            $statusToSet = 'Inseminasi Buatan Berhasil';
+         if (strtolower($newRowData['hasil']) === 'sukses') {
+            $newRowData['hasil'] = 'Inseminasi Buatan Berhasil';
         } elseif (strtolower($newRowData['hasil']) === 'gagal') {
-            $statusToSet = 'Inseminasi Buatan Gagal';
-        }
+            $newRowData['hasil'] = 'Inseminasi Buatan Gagal';}
+        $statusToSet = $newRowData['hasil'];
+
+        DB::table('ib')->insert($newRowData);
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'create',
+            'table'       => 'ib',
+            'primary_key' => $newRowData['id_ib'],
+            'row'         => $newRowData
+        ]);
+       
         DB::table('kejadian')->where('id_kejadian', $newRowData['id_kejadian'])
             ->update([
                 'status' => $statusToSet,
                 'updated_at' => new \DateTime()
             ]);
-        
+          if ($request->expectsJson()) {
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $newRowData
+            ]);
+        };
+       
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+        'action'      => 'update',
+        'table'       => 'kejadian',
+        'primary_key' => 'id_kejadian',
+        'row'         => [
+            'id_kejadian' => $newRowData['id_kejadian'], 
+            'status' => $statusToSet,
+            'updated_at' => new \DateTime()
+            ],
+        ]);
      
         return redirect()->to('/kejadian/show/'.$newRowData['id_kejadian']);
     }
@@ -210,7 +186,11 @@ class IbController extends Controller
         //         break;
         //     }
         // }
-        $data = DB::table('ib')->where('id_ib', $id)->first();
+        $data = DB::table('ib')->where('id_ib', $id)
+                ->join('kejadian','kejadian.id_kejadian','ib.id_kejadian')
+                ->join('peternak','kejadian.id_peternak','peternak.id_peternak')
+                ->select('ib.*','peternak.nama')
+                ->first();
 
         return view('ib.edit_ib', compact('data'));
     }
@@ -220,115 +200,77 @@ class IbController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
-       
-
-        // $file = $this->gdrive->findFileByNameInFolder();
-        // $sheetData = $this->read($file);
-        // $spreadsheet = $sheetData['spreadsheet'];
-        // $sheet = $sheetData['sheet'];
-        // $localPath = $sheetData['localPath'];
-        // $file = $sheetData['file'];
-
-        // $rows = $sheet->toArray();
-        // $headers = array_map('strtolower', $rows[0]);
-        // $idColIndex = array_search('id', $headers);
-
-        // foreach ($rows as $i => $row) {
-        //     if ($i === 0) continue;
-        //     if ($row[$idColIndex] == $id) {
-        //         foreach ($headers as $j => $header) {
-        //             $sheet->setCellValueByColumnAndRow($j + 1, $i + 1, $newData[$header] ?? $row[$j]);
-        //         }
-        //         break;
-        //     }
-        // }
-        // // Update the status in the 'kejadian' sheet
-        // $newSheet = $spreadsheet->getSheetByName('kejadian');
-        // $kejadian = $newSheet->toArray();
-        // $targetHeaders = array_map('strtolower', $kejadian[0]); // convert to lowercase for consistency
-        // $idIndex = array_search('id_kejadian', $targetHeaders);
-        // $statusIndex = array_search('status', $targetHeaders); // Column to update
-        // $tanggalIndex = array_search('tanggal_diperbarui', $targetHeaders); // Column to update
         $newData = [
             'id_kejadian' => $request->kejadian,
             'id_staff' => $request->staff,
+            'id_ticket' => $request->ticket,
             'hasil' => $request->status,
             'created_at' => $request->tanggal,
+            'updated_at' => new \DateTime()
         ];
         
-        $statusToSet = $request->status;
         if (strtolower($newData['hasil']) === 'sukses') {
-            $statusToSet = 'Inseminasi Buatan Berhasil';
+            $newData['hasil'] = 'Inseminasi Buatan Berhasil';
         } elseif (strtolower($newData['hasil']) === 'gagal') {
-            $statusToSet = 'Inseminasi Buatan Gagal';}
+            $newData['hasil'] = 'Inseminasi Buatan Gagal';}
+        $statusToSet = $newData['hasil'];
         DB::table('ib')->where('id_ib', $id)
-            ->update([
-                'id_kejadian' => $newData['id_kejadian'],
-                'id_staff' => $newData['id_staff'],
-                'hasil' => $statusToSet,
-                'created_at' => $newData['created_at'],
-                'updated_at' => new \DateTime()
-            ]);
+            ->update($newData);
+         fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'update',
+            'table'       => 'ib',
+            'primary_key' => 'id_ib',
+            'row'         => array_merge(['id_ib'=>$id],$newData),
+        ]);
+        
         if($statusToSet){
-
             DB::table('kejadian')->where('id_kejadian', $newData['id_kejadian'])
             ->update([
                 'status' => $statusToSet,
                 'updated_at' => new \DateTime()
             ]);
         }
-        // Only apply if statusToSet is defined
-        // if ($statusToSet && $idIndex !== false && $statusIndex !== false) {
-        //     foreach ($kejadian as $rowIndex => $row) {
-        //         if ($rowIndex === 0) continue; // skip header
-        //         if (isset($row[$idIndex]) && $row[$idIndex] === $newData['id_kejadian']) {
-        //             $newSheet->setCellValueByColumnAndRow($statusIndex + 1, $rowIndex + 1, $statusToSet);
-        //             $newSheet->setCellValueByColumnAndRow($tanggalIndex + 1, $rowIndex + 1, new \Date);
-
-        //             break;
-        //         }
-        //     }
-         
-        // }
         
-        // // Save the updated spreadsheet
-        // $writer = new Xlsx($spreadsheet);
-        // $writer->save($localPath);
-        // $this->gdrive->uploadOrUpdateFile($localPath, $file->name);
+          fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'update',
+            'table'       => 'kejadian',
+            'primary_key' => 'id_kejadian',
+            'row'         => [
+                'id_kejadian' => $newData['id_kejadian'],
+                'status' => $statusToSet,
+                'updated_at' => new \DateTime()
+            ],
+        ]);
 
+          if ($request->expectsJson()) {
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $newRowData
+            ]);
+        };
         return redirect('/ib');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id, Request $request)
     {
-        //
-        // $file = $this->gdrive->findFileByNameInFolder();
-        // $sheetData = $this->read($file);
-        // $spreadsheet = $sheetData['spreadsheet'];
-        // $sheet = $sheetData['sheet'];
-        // $localPath = $sheetData['localPath'];
-        // $file = $sheetData['file'];
-
-        // $rows = $sheet->toArray();
-        // $headers = array_map('strtolower', $rows[0]);
-        // $idColIndex = array_search('id', $headers);
-
-        // foreach ($rows as $i => $row) {
-        //     if ($i === 0) continue;
-        //     if ($row[$idColIndex] == $id) {
-        //         $sheet->removeRow($i + 1);
-        //         break;
-        //     }
-        // }
-
-        // $writer = new Xlsx($spreadsheet);
-        // $writer->save($localPath);
-        // $this->gdrive->uploadOrUpdateFile($localPath, $file->name);
         DB::table('ib')->where('id_ib', $id)->delete();
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'delete',
+            'table'       => 'ib',
+            'primary_key' => 'id_ib',
+            'row'         => ['id_ib' => $id],
+        ]);
+          if ($request->expectsJson()) {
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ]);
+        };
         return redirect('/ib');
     }
 }

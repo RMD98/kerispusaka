@@ -1,7 +1,7 @@
 <nav id="navmenu" class="navmenu">
         <ul>
           <li><a href="" role="button">
-                    {{Auth::user()->user_name}}
+                    {{Auth::user()->username}}
               </a></li>
           <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
                         <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2"></i>

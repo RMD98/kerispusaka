@@ -3,7 +3,12 @@
 <div class="bg-white w-full shadow rounded-2xl p-4">
     {{-- Card Header --}}
     <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-semibold text-gray-800">Daftar Inseminasi Buatan</h3>
+        <div>
+
+            <h3 class="text-xl font-semibold text-gray-800">Daftar Kelahiran Ternak</h3>
+            <x-breadcrumb />
+
+        </div>
         <a href="{{route('kelahiran.create')}}"
            class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
             + Add Kelahiran
@@ -34,9 +39,9 @@
                         <td class="px-4 py-2 border-b">{{ $value->created_at }}</td>
                         <td class="px-4 py-2 border-b">{{ $value->updated_at }}</td>
                         <td class="px-4 py-2 border-b">
-                            <a href="" class="text-blue-600 hover:underline">Edit</a>
+                            <a href="{{route('kelahiran.edit', $value->id_kelahiran)}}" class="text-blue-600 hover:underline">Edit</a>
                             |
-                            <form action="" method="POST" class="inline">
+                            <form action="{{route('kelahiran.destroy', $value->id_kelahiran)}}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" onclick="return confirm('Are you sure?')" class="text-red-600 hover:underline">Delete</button>
@@ -51,6 +56,7 @@
             </tbody>
         </table>
     </div>
+    {{$data->links()}}
 </div>
 
 @stop

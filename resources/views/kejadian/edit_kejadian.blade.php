@@ -3,7 +3,12 @@
 <div class="bg-white w-full shadow rounded-2xl p-4">
     {{-- Card Header --}}
     <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-semibold text-gray-800">Edit Kejadian</h3>
+        <div>
+
+            <h3 class="text-xl font-semibold text-gray-800">Edit Kejadian</h3>
+            <x-breadcrumb />
+
+        </div>
     </div>
 
     {{-- Table --}}
@@ -57,29 +62,29 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
 $(document).ready(function() {
-    $('#peternak').select2({
-        placeholder: 'Cari Peternak...',
-        minimumInputLength: 0,
-        ajax: {
-            url: '{{route('peternak.search')}}',
-            dataType: 'json',
-            delay: 250,
-            data: function (params) {
-                return {
-                    q: params.term // search input
-                };
-            },
-            processResults: function (data) {
-                return {
-                    results: data.map(item => ({
-                        id: item.id_peternak,
-                        text: item.text
-                    }))
-                };
-            },
-            cache: true
-        },
-    });
+    // $('#peternak').select2({
+    //     placeholder: 'Cari Peternak...',
+    //     minimumInputLength: 0,
+    //     ajax: {
+    //         url: '{{route('peternak.search')}}',
+    //         dataType: 'json',
+    //         delay: 250,
+    //         data: function (params) {
+    //             return {
+    //                 q: params.term // search input
+    //             };
+    //         },
+    //         processResults: function (data) {
+    //             return {
+    //                 results: data.map(item => ({
+    //                     id: item.id_peternak,
+    //                     text: item.text
+    //                 }))
+    //             };
+    //         },
+    //         cache: true
+    //     },
+    // });
 
     $('#betina').select2({
         placeholder: 'Cari Betina...',
@@ -105,7 +110,38 @@ $(document).ready(function() {
             cache: true
         },
     });
+    $('#ticket').select2({
+            placeholder: 'Cari Ticket...',
+            minimumInputLength: 0,
+            ajax: {
+                url: '{{route('ticket.search')}}',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term // search input
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data.map(item => ({
+                            id: item.id_ticket,
+                            text: item.text,
+                            peternak: item.id_peternak,
+                            nama : item.nama,
+                        })),
+                    };
+                },
+                cache: true
+            },
+        });
+    $('#ticket').on('select2:select', function (e) {
+        let d = e.params.data;
 
+        $('#peternak').val(d.peternak);
+        // $('#no_hp').val(d.no_hp);
+        // $('#alamat').val(d.alamat);
+    });
 });
 </script>
 

@@ -15,6 +15,9 @@ return new class extends Migration
             $table->string('id_peternak')->primary();
             $table->string('nama');
             $table->string('alamat')->nullable();
+            $table->string('kelurahan')->nullable();
+            $table->string('kecamatan')->nullable();
+            $table->string('jenis_ternak')->nullable();
             // $table->string('email');
             $table->string('no_hp')->nullable();
             $table->timestamps();

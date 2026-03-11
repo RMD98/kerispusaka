@@ -9,9 +9,16 @@ class MainController extends Controller
 {
     //
     function index(){
-        $data = DB::table('users')->where('role','dokter')->join('staff','users.id_user','staff.id_staff')->get();
-        $admin = DB::table('users')->where('role','petugas')->join('staff','users.id_user','staff.id_staff')->get();
-        return view('home',compact('data','admin'));
+        if(auth()->user()->role != 'peternak'){
+            return redirect()->route('dashboard');
+        }else{
+
+            // $data = DB::table('users')->where('role','dokter')->join('staff','users.id_user','staff.id_staff')->get();
+            // $admin = DB::table('users')->where('role','petugas')->join('staff','users.id_user','staff.id_staff')->get();
+            // return view('home',compact('data','admin'));
+            $data = DB::table('staff')->get();
+            return view('home',compact('data'));
+        }
     }
     function downloadPdf($id){
         $data = DB::table('kejadian')->where('id_kejadian', $id)->first();

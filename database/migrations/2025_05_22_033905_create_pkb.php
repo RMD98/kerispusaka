@@ -15,11 +15,12 @@ return new class extends Migration
             $table->string('id_pkb')->primary();
             $table->string('id_ib');
             $table->string('id_kejadian');
-            $table->string('no_dokumen');
+            $table->string('id_ticket')->nullable();
+            $table->string('no_dokumen')->nullable();
             $table->string('id_staff');
             $table->string('hasil');
             // $table->string('status')->nullable()->default('Belum Ada Tindakan');
-            $table->string('keterangan')->nullable();;
+            $table->string('keterangan')->nullable();
             $table->timestamps();
         });
     }

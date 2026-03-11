@@ -14,6 +14,7 @@ use App\Http\Controllers\CallController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\PenyakitController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,9 +26,27 @@ use App\Http\Controllers\TicketController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('dashboard')->middleware([]);
-// });
+Route::get('/', function () {
+    return view('dashboard');
+});
+Route::get('/test-sheet', function () {
+    $newRowData = array(
+            // 'id_penyakit' => 'Penyakit-'.$year.'.'.sprintf('%03d', $id),
+            'id_penyakit' => 'Penyakit-26.01.001',
+            'id_ticket' => 'Laporan-26.01.001',
+            'id_sapi' => '3213',
+            'keterangan' => 'Test Keterangan',
+        );
+    fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+        'action'      => 'create',
+        'table'       => 'test_table',
+        'primary_key' => $newRowData['id_penyakit'],
+        'row'         => $newRowData
+    ]);
+
+    return "Sent!";
+});
+
 
 // Route::get('/', function () {
 //     return view('home-v1-bjr-plt');
@@ -42,20 +61,23 @@ Route::middleware('auth')->group(function () {
     Route::get('/checklimit/{id}',[TicketController::class,'checklimit'])->name('ticket.checklimit');
     Route::get('/ticket/table/{id}',[TicketController::class,'table'])->name('ticket.table');
     Route::middleware('exclude_role')->group(function () {  
-        Route::get('/', [TicketController::class, 'index'])->name('dashboard');
+        Route::get('/', function () {return view('dashboard');})->name('dashboard');
+        Route::get('/ticket', [TicketController::class, 'index'])->name('ticket.index');
         Route::delete('/ticket/{id}', [TicketController::class, 'destroy'])->name('ticket.destroy');
         Route::get('/edit_ticket/{id}', [TicketController::class, 'edit'])->name('ticket.edit');
         Route::post('/edit_ticket/{id}', [TicketController::class, 'update'])->name('ticket.update');
         Route::get('/add_ticket',[TicketController::class,'create'])->name('ticket.create');
         Route::post('/add_ticket',[TicketController::class,'store'])->name('ticket.store');
         Route::post('/update_status',[TicketController::class,'updateStatus'])->name('ticket.updateStatus');
+        Route::get('/ticket/search',[TicketController::class,'search'])->name('ticket.search');
+
         
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
         
         Route::get('/staff', [StaffController::class,'index'])->name('staff.index');
-        Route::delete('/staff', [StaffController::class,'destroy'])->name('staff.destroy');
+        Route::delete('/staff/{id}', [StaffController::class,'destroy'])->name('staff.destroy');
         Route::get('/edit_staff/{id}', [StaffController::class,'edit'])->name('staff.edit');
         Route::put('/update_staff/{id}', [StaffController::class,'update'])->name('staff.update');
         Route::get('/staff/search', [StaffController::class,'search'])->name('staff.search');
@@ -88,7 +110,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/add_pkb/{id?}',[PkbController::class,'store'])->name('pkb.store');
         
         Route::get('/kelahiran',[KelahiranController::class,'index'])->name('kelahiran.index');
-        Route::delete('/kelahiran',[KelahiranController::class,'destroy'])->name('kelahiran.destroy');
+        Route::delete('/kelahiran/{id}',[KelahiranController::class,'destroy'])->name('kelahiran.destroy');
         Route::get('/add_kelahiran/{id?}',[KelahiranController::class,'create'])->name('kelahiran.create');
         Route::post('/add_kelahiran/{id?}',[KelahiranController::class,'store'])->name('kelahiran.store');
         Route::get('/edit_kelahiran/{id}',[KelahiranController::class,'edit'])->name('kelahiran.edit');
@@ -117,6 +139,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/edit_betina/{id}',[BetinaController::class,'edit'])->name('betina.edit');
         Route::put('/update_betina/{id}',[BetinaController::class,'update'])->name('betina.update');
         Route::get('/betina/search',[BetinaController::class,'search'])->name('betina.search');
+        
+        Route::get('/penyakit',[PenyakitController::class,'index'])->name('penyakit.index');
+        Route::delete('/penyakit/{id}',[PenyakitController::class,'destroy'])->name('penyakit.destroy');
+        Route::get('/add_penyakit',[PenyakitController::class,'create'])->name('penyakit.create');
+        Route::post('/add_penyakit',[PenyakitController::class,'store'])->name('penyakit.store');
+        Route::get('/edit_penyakit/{id}',[PenyakitController::class,'edit'])->name('penyakit.edit');
+        Route::put('/edit_penyakit/{id}',[PenyakitController::class,'update'])->name('penyakit.update');
+        Route::get('/penyakit/search',[PenyakitController::class,'search'])->name('penyakit.search');
         
         Route::get('/print_pdf/{id}',[MainController::class,'printPdf'])->name('print.pdf');
         Route::get('/user',[UserController::class,'index'])->name('user.index');

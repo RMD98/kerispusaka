@@ -27,7 +27,7 @@
         <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
           <div class="card" >
             <h3>Permintaan IB</h3>
-            <p>Melakukan Permintaan Inseminasi Buatan (IB) untuk ternakn anda</p>
+            <p>Melakukan Permintaan Inseminasi Buatan (IB) untuk ternak anda</p>
             <div class="card-btn">
               <a href="#" class="btn-primary" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#contactModal" onclick="showModal('IB')">Minta IB</a>
             </div>
@@ -39,7 +39,16 @@
             <h3>Pemeriksaan Kebuntingan</h3>
             <p>Melakukan permintaan Pengecekan Kebuntingan pada ternak anda</p>
             <div class="card-btn">
-              <a href="#" class="btn-primary" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#contactModal" onclick="showModal('Kebuntingan')">Perika Kebuntingan</a>
+              <a href="#" class="btn-primary" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#contactModal" onclick="showModal('PKB')">Periksa Kebuntingan</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+          <div class="card" >
+            <h3>Laporan Kelahiran</h3>
+            <p>Melakukan Pelaporan Kelahiran dan Pemeriksaan pada ternak anda</p>
+            <div class="card-btn">
+              <a href="#" class="btn-primary" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#contactModal" onclick="showModal('Kelahiran')">Lapor Kelahiran</a>
             </div>
           </div>
         </div>
@@ -62,14 +71,14 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
               </div>
               <div class="modal-body">
-                @foreach($admin as $admin)
+                @foreach($data as $admin)
                   <div class="contact">
                     <a href="#"class="btn-blue" onclick="call('{{ $admin->id_staff }}')">{{ $admin->nama }}</a>
                   </div>
                 @endforeach
               </div>
               <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button class="btn btn-secondary" id="close-btn" data-bs-dismiss="modal">Tutup</button>
               </div>
             </div>
           </div>
@@ -89,7 +98,7 @@
                 @endforeach
               </div>
               <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button class="btn btn-secondary" id="close-btn" data-bs-dismiss="modal">Tutup</button>
               </div>
             </div>
           </div>
@@ -144,11 +153,26 @@
       activeService = service;
     }
     function closeModal() {
+      let id ='';
       if(activeService=='Admin') {
-        $('#admin').modal('hide');
+        // $('#admin').modal('hide');
+        id = 'admin'
       } else {
-        $('#contactModal').modal('hide');
+        // $('#contactModal').modal('hide');
+        id = 'contactModal'
       }
+      const el = document.getElementById(id);
+
+      let modal = bootstrap.Modal.getInstance(el);
+      if (!modal) {
+          modal = new bootstrap.Modal(el);
+      }
+      modal.hide();
+      setTimeout(() => {
+          document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+          document.body.classList.remove('modal-open');
+          document.body.style.removeProperty('padding-right');
+      }, 200);
       // document.getElementById('contactModal').style.display = 'none';
     }
     window.onclick = function(event) {
@@ -198,21 +222,21 @@
                         showConfirmButton: false,
                         timer: 2000
                     });
-                        $.ajax({
-                            url: "{{route('call.start')}}",
-                            type: 'POST', // or 'POST', 'PUT', 'DELETE'
-                            data: { agent: target }, // Data to send
-                            dataType: 'json', // Expected data type of the response
-                            success: function(data) {
-                                console.log('Success:', data);
+                        // $.ajax({
+                        //     url: "{{route('call.start')}}",
+                        //     type: 'POST', // or 'POST', 'PUT', 'DELETE'
+                        //     data: { agent: target }, // Data to send
+                        //     dataType: 'json', // Expected data type of the response
+                        //     success: function(data) {
+                        //         console.log('Success:', data);
 
-                            },
-                            error: function(xhr, status, error) {
-                                console.error('Error:', error);
-                            }
+                        //     },
+                        //     error: function(xhr, status, error) {
+                        //         console.error('Error:', error);
+                        //     }
           
-                        });
-                        console.log('Success:', data);
+                        // });
+                        // console.log('Success:', data);
                     },
                     error: function(xhr, status, error) {
                         console.error('Error:', error);

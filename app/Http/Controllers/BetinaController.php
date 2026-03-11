@@ -37,14 +37,14 @@ class BetinaController extends Controller
       
 
         if(auth()->user()->role == 'super admin'){
-            $data = DB::table('betina')->get();
+            $data = DB::table('betina')->paginate(10);
         }else if(auth()->user()->role == 'peternak'){
             
             $data = DB::table('betina')
                     ->join('peternak','betina.id_peternak','peternak.id_peternak')
                     ->where('peternak.id_peternak','=',auth()->user()->id_user)
                     ->select('betina.*')
-                    ->get();
+                    ->paginate(10);
         }
         return view('betina.betina',compact('data'));
     }
@@ -108,7 +108,12 @@ class BetinaController extends Controller
         //     $newRowData['id_betina'] = "{$prefix}-{$year}-{$nextNumber}";
         // };
         DB::table('betina')->insert($newRowData);
-      
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'create',
+            'table'       => 'betina',
+            'primary_key' => $newRowData['ear_tag'],
+            'row'         => $newRowData
+        ]);
 
         return redirect('/betina')->with('success', 'Data Betina Berhasil Ditambahkan');
     }
@@ -197,6 +202,12 @@ class BetinaController extends Controller
         //     $newRowData['id_betina'] = "{$prefix}-{$year}-{$nextNumber}";
         // };
         DB::table('betina')->where('ear_tag',$id)->update($newRowData);
+           fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'update',
+            'table'       => 'betina',
+            'primary_key' => $newRowData['ear_tag'],
+            'row'         => $newRowData
+        ]);
         return redirect('/betina')->with('success', 'Data Betina Berhasil Diupdate');
     }
 
@@ -207,6 +218,12 @@ class BetinaController extends Controller
     {
         //
         DB::table('betina')->where('ear_tag',$id)->delete();
+           fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'delete',
+            'table'       => 'betina',
+            'primary_key' => 'ear_tag',
+            'row'         => ['ear_tag' => $id],
+        ]);
         return redirect('/betina')->with('success', 'Data Betina Berhasil Dihapus');
     }
 }

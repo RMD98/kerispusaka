@@ -31,23 +31,17 @@ class PeternakController extends Controller
         ];
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        //
-        // $file = $this->gdrive->findFileByNameInFolder();
-        // $this->gdrive->downloadExcelFile($file['file']->id,$file['path']);
-        // $excel = $this->read($file);
-        // $rows = $excel['sheet']->toArray();
-        // // dd($rows);
-        // $headers = array_map('strtolower', $rows[0]); // convert to lowercase for consistency
-
-        // $data = [];
-
-        // foreach (array_slice($rows, 1) as $row) {
-        //     $data[] = array_combine($headers, $row);
-        // }
         $data = DB::table('peternak')->get();
         // dd($data);
+        if ($request->expectsJson()) {
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ]);
+        };
         return view('peternak.peternak',compact('data'));
     }
 
@@ -70,39 +64,67 @@ class PeternakController extends Controller
             'name' => 'required|string|max:255',
             // 'email' => 'required|email|max:255',
             'address' => 'required|string|max:255',
-            'phone' => 'required|string|max:15',
+            // 'phone' => 'required|string|max:15',
+            'jenis' => 'required|string|max:255',
         ]);
-        $prefix = 'PETERNAK';
-        $year = Carbon::now()->format('Y');
+        $prefix = 'PTK';
+        $year = Carbon::now()->format('y');
         $padLength = 4;
         $newRowData = [
             'nama' => $request->name,
-            // 'email' => $request->email,
+            'jenis_ternak' => $request->jenis,
             'alamat' => $request->address,
+            'kelurahan'=> $request->kelurahan,
+            'kecamatan'=> $request->kecamatan,
             'no_hp' => $request->phone,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ];
         $count = DB::table('peternak')->count();
         if($count == 0){
-            $newRowData['id_peternak'] = "{$prefix}-{$year}-0001";
+            $newRowData['id_peternak'] = "{$prefix}{$year}001";
         }else{
             $lastRow = DB::table('peternak')->orderBy('id_peternak', 'desc')->first();
             $lastId = $lastRow->id_peternak;
-            $lastNumber = (int) substr($lastId, strrpos($lastId, '-') + 1);
-            $nextNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
-            $newRowData['id_peternak'] = "{$prefix}-{$year}-{$nextNumber}";
+            if(substr($lastId, 3, 2 ) != $year){
+                $id = ['id_peternak'=>"{$prefix}{$year}001"];
+                
+            }else{
+                $number = sprintf("%03d",substr($lastId, 5) + 1) ;
+                $id = ['id_peternak'=>"{$prefix}{$year}{$number}"];
+            }
+            $newRowData = array_merge($id,$newRowData);
+            // $lastNumber = (int) substr($lastId, strrpos($lastId, '-') + 1);
+            // $nextNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
+            // $newRowData['id_peternak'] = "{$prefix}-{$year}-{$nextNumber}";
         };
+        
+        // dd($newRowData);
         DB::table('peternak')->insert($newRowData);
+     
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'create',
+            'table'       => 'peternak',
+            'primary_key' => $newRowData['id_peternak'],
+            'row'         => $newRowData
+        ]);
         // Insert the new row into the database
         if($request->username && $request->password){
             $account = array(
-                'user_name' => $request->username,
+                'username' => $request->username,
                 'password' => Hash::make($request->password),
                 'role'  => 'peternak',
                 // 'email' => $newRowData['email'],
                 'id_user' => $newRowData['id_peternak']);
-            DB::table('users')->insert($account);
+            $usr_id = DB::table('users')->insertGetId($account);
             
         }
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'create',
+            'table'       => 'users',
+            'primary_key' => $usr_id,
+            'row'         => array_merge(['id'=>$usr_id],$account)
+        ]);
         // $file = $this->gdrive->findFileByNameInFolder();
 
         // $sheetData = $this->read($file);
@@ -164,7 +186,13 @@ class PeternakController extends Controller
         // $writer->save($localPath);
 
         // $this->gdrive->uploadOrUpdateFile($localPath, $file->name);
+        if ($request->expectsJson()) {
 
+            return response()->json([
+                'status' => 'success',
+                'data' => $newRowData
+            ]);
+        };
         return redirect()->route('peternak.index')->with('success', 'Data Peternak Berhasil Ditambahkan');
     }
 
@@ -208,7 +236,7 @@ class PeternakController extends Controller
         //
         $data = DB::table('peternak')->join('users', 'peternak.id_peternak', 'users.id_user')
                 ->where('id_peternak', $id)
-                ->select('peternak.*', 'users.user_name', 'users.password')
+                ->select('peternak.*', 'users.username', 'users.password')
                 ->first();
         return view('peternak.edit_peternak', compact('data'));
     }
@@ -228,28 +256,69 @@ class PeternakController extends Controller
 
         $newRowData = [
             'nama' => $request->name,
-            // 'email' => $request->email,
+            'jenis_ternak' => $request->jenis,
             'alamat' => $request->address,
+            'kelurahan'=> $request->kelurahan,
+            'kecamatan'=> $request->kecamatan,
             'no_hp' => $request->phone,
+            'updated_at' => Carbon::now(),
         ];
         DB::table('peternak')->where('id_peternak', $id)->update($newRowData);
         // Update the user account if provided\
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'update',
+            'table'       => 'peternak',
+            'primary_key' => 'id_peternak',
+            'row'         => array_merge(['id_peternak' => $id], $newRowData),
+        ]);
         DB::table('users')->where('id_user', $id)->update([
-            'user_name' => $request->username,
+            'username' => $request->username,
             // 'email' => $request->email,
-        ]);        
+            ]);        
+        $usr_id = DB::table('users')->where('id_user', $id)->first()->id_user;
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'update',
+            'table'       => 'users',
+            'primary_key' => $usr_id,
+            'row'         => array_merge(['id'=>$usr_id,'username'=>$request->username],)
+        ]);
+         if ($request->expectsJson()) {
 
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ]);
+        };
         return redirect()->route('peternak.index')->with('success', 'Data Peternak Berhasil Diupdate');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id, Request $request)
     {
         //
         DB::table('peternak')->where('id_peternak', $id)->delete();
         DB::table('users')->where('id_user', $id)->delete();
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'delete',
+            'table'       => 'peternak',
+            'primary_key' => 'id_peternak',
+            'row'         => ['id_peternak' => $id],
+        ]);
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'delete',
+            'table'       => 'users',
+            'primary_key' => 'id_user',
+            'row'         => ['id_user' => $id],
+        ]);
+         if ($request->expectsJson()) {
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ]);
+        };
         return redirect()->route('peternak.index')->with('success', 'Data Peternak Berhasil Dihapus');
     }
 }

@@ -4,6 +4,8 @@
     {{-- Card Header --}}
     <div class="flex items-center justify-between mb-4">
         <h2 class="text-xl font-semibold text-gray-800">Data Kejadian {{$data->id_kejadian}}</h2>
+            <x-breadcrumb />
+        
         <a href="{{ route('print.pdf', $data->id_kejadian) }}" target="_blank"
             onclick="setTimeout(() => { window.location.href='{{ route('print.pdf', [$data->id_kejadian, 'download' => 1]) }}'; }, 1000)"
            class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition" >
@@ -74,7 +76,7 @@
     <hr class="my-4 border-t-2 border-gray-400">
     <div class="flex items-center justify-between mb-4">
         <h3 class="text-xl font-semibold text-gray-800">Data Inseminasi Buatan</h3>
-        <a href="/add_ib/{{$data->id_kejadian}}"
+        <a href="{{route('ib.create',$data->id_kejadian)}}"
            class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
             + Add Inseminasai
         </a>
@@ -128,7 +130,7 @@
     <hr class="my-4 border-t-2 border-gray-400">
     <div class="flex items-center justify-between mb-4">
         <h3 class="text-xl font-semibold text-gray-800">Data Pengecekan Kebuntingan</h3>
-        <a href="/add_pkb/{{$data->id_kejadian}}"
+        <a href="{{route('pkb.create',$data->id_kejadian)}}"
            class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
             + Add PKB
         </a>
@@ -186,7 +188,7 @@
     <hr class="my-4 border-t-2 border-gray-400">
     <div class="flex items-center justify-between mb-4">
         <h3 class="text-xl font-semibold text-gray-800">Data Kelahiran</h3>
-        <a href="/add_kelahiran/{{$data->id_kejadian}}"
+        <a href="{{route('kelahiran.create',$data->id_kejadian)}}"
            class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
             + Add Kelahiran
         </a>

@@ -3,77 +3,60 @@
 <div class="bg-white w-full shadow rounded-2xl p-4">
     {{-- Card Header --}}
     <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-semibold text-gray-800">User List</h3>
+        <div>
+
+            <h3 class="text-xl font-semibold text-gray-800">User List</h3>
+            <x-breadcrumb />
+
+        </div>
     </div>
 
     {{-- Table --}}
     <div class="overflow-x-auto">
-    <form action="{{ route('staff.update', $data->id_staff) }}" method="POST" class="flex-1 overflow-auto space-y-6">
+    <form action="{{route('ticket.update', $data->id_ticket)}}" method="POST" class="flex-1 overflow-auto space-y-6">
                 @csrf
-                @method('PUT')
-                <!-- <div>  
-                    <label for="id" class="block text-sm font-medium text-gray-700">Id</label>
-                    <input type="text" name="id" id="id" required
-                           class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
-                </div> -->
-
+                @method('POST')
                 <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                    <input type="text" name="name" id="name" required value="{{$data->nama}}"
-                           class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                
-                <!-- <div>
-                    <label for="address" class="block text-sm font-medium text-gray-700">Alamat</label>
-                    <input type="text" name="address" id="address" required value="$data->alamat"
-                           class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
-                </div> -->
-                <div>
-                    <label for="asal" class="block text-sm font-medium text-gray-700">Asal</label>
-                    <input type="text" name="asal" id="asal" required value="{{$data->asal}}"
-                           class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="izin" class="block text-sm font-medium text-gray-700">Surat Izin</label>
-                    <input type="text" name="izin" id="izin" required value="{{$data->surat_izin}}"
-                           class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <!-- <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input type="email" name="email" id="email" required value="$data->email"
-                           class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
-                </div> -->
-
-                <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700">Telephone</label>
-                    <input type="tel" name="phone" id="phone" required pattern="[0-9]{12}" value="{{$data->no_hp}}"
-                           class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="jabatan" class="block text-sm font-medium text-gray-700">Jabatan</label>
-                    <select name="jabatan" id="jabatan" required
-                           class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
-                            <option value="dokter" {{$data->role == 'dokter' ? 'selected' : ''}}>Dokter</option>
-                            <option value="petugas" {{$data->role == 'petugas' ? 'selected' : ''}}>Petugas</option>
+                    <label for="staff" class="block text-sm font-medium text-gray-700">Petugas Penanggung Jawab</label>
+                    <select id="staff" name="staff" class="w-full rounded-lg shadow-sm border border-gray-300">
+                        <option value="{{$data->id_staff}}" selected>{{$data->staff}}</option>
                     </select>
                 </div>
-
                 <div>
-                    <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
-                    <input type="username" name="username" id="username" required value="{{$data->user_name}}"
+                    <label for="peternak" class="block text-sm font-medium text-gray-700">Pelapor</label>
+                    <select id="peternak" name="peternak" class="w-full rounded-lg shadow-sm border border-gray-300">
+                        <!-- Options loaded by AJAX -->
+                         <option value="{{$data->id_peternak}}" selected>{{$data->peternak}}</option>
+                    </select>
+                </div>               
+                <div>
+                    <label for="jenis" class="block text-sm font-medium text-gray-700">Jenis Laporan</label>
+                    <select name="jenis" id="jenis" required
                            class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option {{$data->jenis_laporan == 'Admin' ? 'selected' :''}} value="Admin">Admin</option>
+                            <option {{$data->jenis_laporan == 'IB' ? 'selected' :''}} value="IB">IB</option>
+                            <option {{$data->jenis_laporan == 'Kebuntingan' ? 'selected' :''}} value="Kebuntingan">Kebuntingan</option>
+                            <option {{$data->jenis_laporan == 'Penyakit' ? 'selected' :''}} value="Penyakit">Penyakit</option>
+                    </select>
                 </div>
-
-                <!-- <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                    <input type="password" name="password" id="password" required value="{{$data->password}}"
+                <div>
+                    <label for="tanggal" class="block text-sm font-medium text-gray-700">Tanggal Laporan</label>
+                    <input type="datetime-local" name="tanggal" id="tanggal" value="{{date('Y-m-d\TH:i', strtotime($data->created_at))}}" required
+                           class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 bg-gray-100 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                    <select name="status" id="status" required
                            class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
-                </div> -->
-
+                            <option value="Pending" {{$data->status == 'Pending' ? 'selected' :''}}>Laporan Diterima</option>
+                            <option value="In Progress" {{$data->status == 'In Progress' ? 'selected' :''}}>Dalam Proses</option>
+                            <option value="Resolved" {{$data->status == 'Resolved' ? 'selected' :''}}>Selesai</option>
+                    </select>
+                </div>
                 <div class="pt-4">
                     <button type="submit"
                             class="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition">
-                        Save User
+                        Update Ticket
                     </button>
                 </div>
             </form>
@@ -82,3 +65,61 @@
 </div>
 
 @stop
+@push('script')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    let id = window.location.pathname.split("/")[2];
+
+$(document).ready(function() {
+   $('#peternak').select2({
+        placeholder: 'Cari peternak...',
+        minimumInputLength: 0,
+        ajax: {
+            url: '{{route('peternak.search')}}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term // search input
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data.map(item => ({
+                        id: item.id_peternak,
+                        text: item.text
+                    }))
+                };
+            },
+            cache: true
+        },
+    });
+    $('#staff').select2({
+        placeholder: 'Cari Staff...',
+        minimumInputLength: 0,
+        ajax: {
+            url: '{{route('staff.search')}}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term // search input
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data.map(item => ({
+                        id: item.id_staff,
+                        text: item.text
+                    }))
+                };
+            },
+            cache: true
+        },
+    });
+});
+</script>
+
+@endpush

@@ -3,7 +3,11 @@
 <div class="bg-white w-full shadow rounded-2xl p-4">
     {{-- Card Header --}}
     <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-semibold text-gray-800">Daftar Peternak</h3>
+        <div>
+            <h3 class="text-xl font-semibold text-gray-800">Daftar Peternak</h3>
+            <x-breadcrumb />
+
+        </div>
     </div>
 
     {{-- Table --}}
@@ -28,6 +32,21 @@
                     <input type="text" name="address" id="address" required
                            class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
+                <div>
+                    <label for="kelurahan" class="block text-sm font-medium text-gray-700">Kelurahan*</label>
+                    <input type="text" name="kelurahan" id="kelurahan" required
+                           class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="kecamatan" class="block text-sm font-medium text-gray-700">Kecamatan *</label>
+                    <input type="text" name="kecamatan" id="kecamatan" required
+                           class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="jenis" class="block text-sm font-medium text-gray-700">Jenis Ternak *</label>
+                    <input type="text" name="jenis" id="jenis" required
+                           class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
 
                 <!-- <div>
                     <label for="email" class="block text-sm font-medium text-gray-700">Email *</label>
@@ -37,7 +56,7 @@
 
                 <div>
                     <label for="phone" class="block text-sm font-medium text-gray-700">Nomor Handphone *</label>
-                    <input type="tel" name="phone" id="phone" required pattern="[0-9]{12}"
+                    <input type="tel" name="phone" id="phone"pattern="[0-9]{12}"
                            class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>

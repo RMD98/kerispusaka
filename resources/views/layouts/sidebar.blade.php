@@ -1,35 +1,36 @@
-<nav class="space-y-2">
-    <a href="{{route('staff.index')}}" class="block px-4 py-2 rounded hover:bg-blue-100 text-gray-700 font-medium">Staff</a>
-    <a href="{{route('kejadian.index')}}"
-        @click.prevent="openUsers = !openUsers; window.location.href='{{route('kejadian.index')}}'"
-        class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-blue-100 text-gray-700 font-medium">
-            Kejadian
-            <svg :class="{ 'rotate-180': openUsers }" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" stroke-width="2"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-            </svg>
-        </a>
 
-    <div x-show="openUsers" x-collapse class="pl-6 mt-1 space-y-1">
-       
-        <a href="{{route('ib.index')}}" class="block px-4 py-2 rounded hover:bg-blue-100 text-gray-700 font-medium">IB</a>
-        <a href="{{route('pkb.index')}}" class="block px-4 py-2 rounded hover:bg-blue-100 text-gray-700 font-medium">PKB</a>
-        <a href="{{route('kelahiran.index')}}" class="block px-4 py-2 rounded hover:bg-blue-100 text-gray-700 font-medium">Kebuntingan</a>
-    </div>
+    <h1 class="text-2xl font-semibold text-blue-600 ml-8"><a href="{{route('dashboard')}}">HOME</a></h1>
 
-    <a href="{{route('peternak.index')}}"
-        @click.prevent="openUsers = !openUsers; window.location.href='{{route('peternak.index')}}'"
-        class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-blue-100 text-gray-700 font-medium">
-            Peternak
-            <svg :class="{ 'rotate-180': openUsers }" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" stroke-width="2"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-            </svg>
-        </a>
+    <nav class="space-y-2">
 
-    <div x-show="openUsers" x-collapse class="pl-6 mt-1 space-y-1">
-        <a href="{{route('pejantan.index')}}" class="block px-4 py-2 rounded hover:bg-blue-100 text-gray-700 font-medium">Sapi Pejantan</a>
-        <a href="{{route('betina.index')}}" class="block px-4 py-2 rounded hover:bg-blue-100 text-gray-700 font-medium">Sapi Betina</a>
-    </div>
-    <a href="{{route('user.index')}}" class="block px-4 py-2 rounded hover:bg-blue-100 text-gray-700 font-medium">User</a>
-</nav>
+        {!! menuItem('Ticket', '🎫', 'ticket') !!}
+        {!! menuItem('Staff', '🧑‍💼', 'staff') !!}
+        {!! menuItem('Kejadian', '📄', 'kejadian') !!}
+        {!! menuItem('IB', '📌', 'ib') !!}
+        {!! menuItem('PKB', '📌', 'pkb') !!}
+        {!! menuItem('Kelahiran', '📌', 'kelahiran') !!} 
+        {!! menuItem('Penyakit', '🦠', 'penyakit') !!}
+        {!! menuItem('Peternak', '👥', 'peternak') !!}
+        {!! menuItem('Sapi Betina', '🐄', 'betina') !!}
+        {!! menuItem('Sapi Pejantan', '🐂', 'pejantan') !!}
+
+    </nav>
+@php
+    function menuItem($label, $icon, $routeName)
+    {
+        $isActive = request()->routeIs($routeName . '*');
+
+        $classes = $isActive
+            ? 'text-blue-600 bg-blue-50 font-semibold border-l-4 border-blue-600'
+            : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50 border-l-4 border-transparent';
+
+        $url = route($routeName . '.index'); // auto route fix
+
+        return "
+            <a href=\"{$url}\" class=\"flex items-center space-x-3 px-3 py-2 rounded-lg transition {$classes}\">
+                <span>{$icon}</span>
+                <span>{$label}</span>
+            </a>
+        ";
+    }
+@endphp

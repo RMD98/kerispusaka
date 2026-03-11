@@ -15,8 +15,9 @@ return new class extends Migration
             $table->string('id_kejadian')->primary();
             $table->string('id_betina');
             $table->string('id_peternak');
+            // $table->string('id_ticket')->nullable();
             $table->string('status')->nullable()->default('Belum Ada Tindakan');
-            // $table->string('keterangan')->nullable();
+            $table->string('keterangan')->nullable();
             $table->timestamps();
         });
     }

@@ -3,7 +3,12 @@
 <div class="bg-white w-full shadow rounded-2xl p-4">
     {{-- Card Header --}}
     <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-semibold text-gray-800">User List</h3>
+        <div>
+
+            <h3 class="text-xl font-semibold text-gray-800">Add Ticket</h3>
+            <x-breadcrumb />
+
+        </div>
     </div>
 
     {{-- Table --}}
@@ -36,9 +41,9 @@
                     <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
                     <select name="status" id="status" required
                            class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
-                            <option value="diterima">Laporan Diterima</option>
-                            <option value="proses">Dalam Proses</option>
-                            <option value="selesai">Selesai</option>
+                            <option value="Pending">Laporan Diterima</option>
+                            <option value="In Progress">Dalam Proses</option>
+                            <option value="Resolved">Selesai</option>
                     </select>
                 </div>
                 <div class="pt-4">
@@ -65,7 +70,7 @@ $(document).ready(function() {
         placeholder: 'Cari peternak...',
         minimumInputLength: 0,
         ajax: {
-            url: '/peternak/search',
+            url: '{{route('peternak.search')}}',
             dataType: 'json',
             delay: 250,
             data: function (params) {
@@ -88,7 +93,7 @@ $(document).ready(function() {
         placeholder: 'Cari Staff...',
         minimumInputLength: 0,
         ajax: {
-            url: '/staff/search',
+            url: '{{route('staff.search')}}',
             dataType: 'json',
             delay: 250,
             data: function (params) {

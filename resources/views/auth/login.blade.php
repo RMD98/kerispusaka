@@ -29,8 +29,8 @@
         @csrf
 
         <div class="input-group">
-          <label class="input-label" for="user_name">Username</label>
-          <input id="user_name" class="input-field" type="text" name="user_name" required autofocus />
+          <label class="input-label" for="username">Username</label>
+          <input id="username" class="input-field" type="text" name="username" required autofocus />
         </div>
 
         <div class="input-group">

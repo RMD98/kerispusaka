@@ -57,10 +57,10 @@ class StaffController extends Controller
         ];
     }
 
-    public function index()
+    public function index(Request $request)
     {
         //
-        $data = DB::table('staff')->get();
+        $data = DB::table('staff')->paginate(10);
         // if(!file_exists(dirname($file['path']))){
             // mkdir(dirname($file['path']), 0755, true);
             // }
@@ -76,6 +76,15 @@ class StaffController extends Controller
         //     $data[] = array_combine($headers, $row);
         // }
         // dd($data);
+
+        if ($request->expectsJson()) {
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ]);
+        };
+    
         return view('staff.staff',compact('data'));
     }
 
@@ -112,104 +121,58 @@ class StaffController extends Controller
         ]);
 
         $prefix = 'STAFF';
-        $year = Carbon::now()->format('Y');
+        $year = Carbon::now()->format('y');
         
         $count = DB::table('staff')->count();
         if($count == 0){
-            $newRowData['id_staff'] = "{$prefix}-{$year}-0001";
+            $newRowData['id_staff'] = "{$prefix}-{$year}001";
         }else{
             $lastRow = DB::table('staff')->orderBy('id_staff', 'desc')->first();
             $lastId = $lastRow->id_staff;
-            $lastNumber = (int) substr($lastId, strrpos($lastId, '-') + 1);
-            $nextNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
-            $newRowData['id_staff'] = "{$prefix}-{$year}-{$nextNumber}";
+            $lastNumber = substr($lastId, strrpos($lastId, '-') + 1,2);
+            if($lastNumber != $year){
+                $id = ['id_staff'=>"{$prefix}-{$year}001"];
+            }else{
+                $number = sprintf("%03d", substr($lastId, strrpos($lastId, '-') + 3)+1);
+                $id = ['id_staff'=>"{$prefix}-{$year}{$number}"];
+            }
+            // $nextNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
+            $newRowData = array_merge($id,$newRowData);
+            // dd($newRowData);
         };
 
         DB::table('staff')->insert($newRowData);        
-
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'create',
+            'table'       => 'staff',
+            'primary_key' => $newRowData['id_staff'],
+            'row'         => $newRowData
+        ]);
         $account =[];
         if($request->username && $request->password){
             $account = array(
-                'user_name' => $request->username,
+                'username' => $request->username,
                 'password' => Hash::make($request->password),
                 'role'  => $request->jabatan,
                 // 'email' => $newRowData['email'],
                 'id_user' => $newRowData['id_staff'],
             );
-            DB::table('users')->insert($account);
-            
+            $usr_id =DB::table('users')->insertGetId($account);
         }
-        // $file = $this->gdrive->findFileByNameInFolder();
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'create',
+            'table'       => 'users',
+            'primary_key' => $usr_id,
+            'row'         => array_merge(['id'=>$usr_id],$account)
+        ]);
+        if ($request->expectsJson()) {
 
-        // $sheetData = $this->read($file);
-        // $spreadsheet = $sheetData['spreadsheet'];
-        // $sheet = $sheetData['sheet'];
-        // $localPath = $sheetData['localPath'];
-        // $file = $sheetData['file'];
-
-        // // Get the existing data and headers
-        // $rows = $sheet->toArray();
-        // $headers = array_map('strtolower', $rows[0]); // Convert headers to lowercase for consistency
-
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ]);
+        };
     
-        
-        // $padLength = 4;
-       
-        // //  Find max numeric part from existing IDs
-        // $maxNumber = 0;
-        // if (in_array('id', $headers)) {
-        //     $idColIndex = array_search('id', $headers);
-        //     foreach ($rows as $i => $row) {
-        //         if ($i === 0) continue;
-        //         $id = $row[$idColIndex] ?? '';
-        //         if (preg_match('/' . $prefix . '-' . $year . '-(\d+)/', $id, $matches)) {
-        //             $num = (int) $matches[1];
-        //             if ($num > $maxNumber) {
-        //                 $maxNumber = $num;
-        //             }
-        //         }
-        //     }
-
-        //     // Generate next custom ID
-        //     $nextNumber = str_pad($maxNumber + 1, $padLength, '0', STR_PAD_LEFT);
-        //     $customId = "{$prefix}-{$year}-{$nextNumber}";
-        //     $newRowData['id'] = $customId;
-        // }
-
-        // // Map the new row data to match the spreadsheet headers
-        // $newRow = [];
-        // foreach ($headers as $header) {
-        //     $newRow[] = $newRowData[$header] ?? ''; // Use blank if the header is not in the request
-        // }
-
-        // // Append the new row to the next available row
-        
-        //  $lastRow = count($rows) + 1;;
-        // // foreach ($rows as $i => $row) {
-        // //     if ($i === 0) continue; // Skip header row
-        // //     if (array_filter($row)) {
-        // //         $lastRow = $i + 2;
-        // //     }
-        // // }
-        // foreach ($newRow as $columnIndex => $value) {
-        //     $sheet->setCellValueByColumnAndRow($columnIndex + 1, $lastRow, $value);
-        // }
-        // // dd($columnIndex);
-
-        // // Step 7: Save and upload back
-        // $writer = new Xlsx($spreadsheet);
-        // $writer->save($localPath);
-
-        // $this->gdrive->uploadOrUpdateFile($localPath, $file->name);
-        // DB::table('log')->insert([
-        //     'user_name' => Auth()->user()->user_name,
-        //     'ip_address' => request()->ip(),
-        //     'jenis_log' => 'Insert',
-        //     'keterangan' => "Staff {$newRowData['nama']} dengan ID {$newRowData['id_staff']} telah ditambahkan oleh ".Auth()->user()->user_name,
-        //     'created_at' => now(),
-        //     'updated_at' => now(),
-        // ]);
-
         return redirect('/staff');
     }
     public function search(Request $request)
@@ -253,7 +216,7 @@ class StaffController extends Controller
         //
         $data = DB::table('staff')->where('id_staff', $id)
                 ->join('users','id_user','id_staff')->first();
-
+        
         return view('staff.edit_staff', compact('data'));
     }
 
@@ -280,11 +243,23 @@ class StaffController extends Controller
             'phone' => 'required|string|max:15',
         ]);
         DB::table('staff')->where('id_staff',$id)->update($newRowData);
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'update',
+            'table'       => 'staff',
+            'primary_key' => 'id_staff',
+            'row'         => $newRowData
+        ]);
         DB::table('users')->where('id_user',$id)->update([
-            'user_name' => $request->username,
+            'username' => $request->username,
             // 'password' => Hash::make($request->password),
             'role'  => $request->jabatan,
             // 'email' => $newRowData['email'],
+        ]);
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'update',
+            'table'       => 'users',
+            'primary_key' => $usr_id,
+            'row'         => array_merge(['id'=>$usr_id,'username'=>$request->username],)
         ]);
         // DB::table('log')->insert([
         //     'user_name' => Auth()->user()->user_name,
@@ -294,17 +269,43 @@ class StaffController extends Controller
         //     'created_at' => now(),
         //     'updated_at' => now(),
         // ]);
+        if ($request->expectsJson()) {
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ]);
+        };
         return redirect()->route('staff.index')->with('success', 'Data Staff Berhasil Diupdate');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id,Request $request)
     {
         //
         DB::table('staff')->where('id_staff', $id)->delete();
         DB::table('users')->where('id_user', $id)->delete();
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'delete',
+            'table'       => 'staff',
+            'primary_key' => 'id_staff',
+            'row'         => ['id_staff' => $id],
+        ]);
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'delete',
+            'table'       => 'users',
+            'primary_key' => 'id_user',
+            'row'         => ['id_user' => $id],
+        ]);
+        if ($request->expectsJson()) {
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ]);
+        };
         return redirect()->route('staff.index')->with('success', 'Data Staff Berhasil Dihapus');
     }
 }

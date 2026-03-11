@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('jenis_kelamin');
             $table->string('id_kejadian');
             $table->string('id_staff');
+            $table->string('id_ticket')->nullable();
             $table->string('keunggulan')->nullable();
             $table->timestamps();
         });

@@ -55,12 +55,18 @@ class PejantanController extends Controller
         ];
     }
 
-    public function index()
+    public function index(Request $request)
     {
        
-        $data = DB::table('pejantan')->get();
+        $data = DB::table('pejantan')->paginate(10);
         // dd($data);
-        
+          if ($request->expectsJson()) {
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ]);
+        };
         return view('pejantan.pejantan',compact('data'));
     }
 
@@ -110,6 +116,19 @@ class PejantanController extends Controller
         //     $newRowData['id_pejantan'] = "{$prefix}-{$year}-{$nextNumber}";
         // };
         DB::table('pejantan')->insert($newRowData);
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'create',
+            'table'       => 'pejantan',
+            'primary_key' => $newRowData['id_pejantan'],
+            'row'         => $newRowData
+        ]);
+          if ($request->expectsJson()) {
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ]);
+        };
        
 
         return redirect('/pejantan')->with('success', 'Data Pejantan Berhasil Ditambahkan');
@@ -174,7 +193,12 @@ class PejantanController extends Controller
         ]);
         
         DB::table('pejantan')->where('id_pejantan',$id)->update($newRowData);
-       
+       fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'update',
+            'table'       => 'pejantan',
+            'primary_key' => 'id_pejantan',
+            'row'         => $newRowData
+        ]);
 
         return redirect('/pejantan')->with('success', 'Data Pejantan Berhasil Ditambahkan');
     }
@@ -182,10 +206,23 @@ class PejantanController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id, Request $request)
     {
         //
         DB::table('pejantan')->where('id_pejantan', $id)->delete();
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'delete',
+            'table'       => 'pejantan',
+            'primary_key' => 'id_pejantan',
+            'row'         => ['id_pejantan' => $id]
+        ]);
+          if ($request->expectsJson()) {
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ]);
+        };
         return redirect()->route('pejantan.index')->with('success', 'Data Pejantan Berhasil Dihapus');
     }
 }

@@ -3,7 +3,12 @@
 <div class="bg-white w-full shadow rounded-2xl p-4">
     {{-- Card Header --}}
     <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-semibold text-gray-800">Tambah Inseminasi Buatan</h3>
+        <div>
+
+            <h3 class="text-xl font-semibold text-gray-800">Tambah Inseminasi Buatan</h3>
+            <x-breadcrumb />
+
+        </div>
     </div>
 
     {{-- Table --}}
@@ -25,6 +30,12 @@
                         </select>
                     </div>
                 @endif
+                <div>
+                    <label for="ticket" class="block text-sm font-medium text-gray-700">Ticket</label>
+                    <select id="ticket" name="ticket" class="w-full rounded-lg shadow-sm border border-gray-300">
+                        <!-- Options loaded by AJAX -->
+                    </select>
+                </div>
                 <div>
                     <label for="staff" class="block text-sm font-medium text-gray-700">No Dokumen</label>
                     <input type="text" name="dokumen" id="dokumen" placeholder="No Dokumen" required
@@ -156,6 +167,40 @@
             },
             cache: true
         },
+    });
+    $('#ticket').select2({
+        placeholder: 'Cari Ticket...',
+        minimumInputLength: 0,
+        ajax: {
+            url: '{{route('ticket.search')}}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term,
+                    kejadian : $('#kejadian').val(),
+                    jenis:'IB', // search input
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data.map(item => ({
+                        id: item.id_ticket,
+                        text: item.text,
+                        peternak: item.id_peternak,
+                        nama : item.nama,
+                    })),
+                };
+            },
+            cache: true
+        },
+    });
+    $('#ticket').on('select2:select', function (e) {
+        let d = e.params.data;
+
+        $('#peternak').val(d.peternak);
+        // $('#no_hp').val(d.no_hp);
+        // $('#alamat').val(d.alamat);
     });
 });
 </script>

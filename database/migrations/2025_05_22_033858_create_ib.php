@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('ib', function (Blueprint $table) {
             $table->string('id_ib')->primary();
             $table->string('id_kejadian');
+            $table->string('id_ticket')->nullable();
             $table->string('no_dokumen')->nullable();
             $table->string('id_staff');
             $table->string('pejantan');

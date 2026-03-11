@@ -10,10 +10,17 @@ class KelahiranController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        $data = DB::table('kelahiran')->get();
+        $data = DB::table('kelahiran')->paginate(10);
+          if ($request->expectsJson()) {
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ]);
+        };
         return view('kelahiran.kelahiran',compact('data'));
     }
 
@@ -36,6 +43,7 @@ class KelahiranController extends Controller
             'id_kejadian' => $request->kejadian,
             'id_staff' => $request->staff,
             'nama' => $request->nama,
+            'id_ticket' => $request->ticket,
             'jenis_kelamin' => $request->kelamin,
             'keunggulan' => $request->keunggulan,
             'created_at' => $request->tanggal,
@@ -49,23 +57,32 @@ class KelahiranController extends Controller
             'keunggulan' => 'required|string|max:255',
             'tanggal' => 'required|string|max:15',
         ]);
-        
-
-    
+            
         $prefix = 'KELAHIRAN';
-        $year = Carbon::now()->format('Y');
+        $year = Carbon::now()->format('y.m');
         $padLength = 4;
         $count = DB::table('kelahiran')->count();
         if($count == 0){
-            $newRowData['id_kelahiran'] = "{$prefix}-{$year}-0001";
+            $newRowData['id_kelahiran'] = "{$prefix}-{$year}.001";
         }else{
             $lastRow = DB::table('kelahiran')->orderBy('id_kelahiran', 'desc')->first();
             $lastId = $lastRow->id_kelahiran;
-            $lastNumber = (int) substr($lastId, strrpos($lastId, '-') + 1);
-            $nextNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
-            $newRowData['id_kelahiran'] = "{$prefix}-{$year}-{$nextNumber}";
-        };
+            if(substr($lastId,strrpos($lastId,'-')+1,5)!=$year){
+                $newRowData['id_kelahiran'] = "{$prefix}-{$year}.001";
+            } else{
+                $number = sprintf("%03d",substr($lastId, strrpos($lastId,'-')+5)+1);
+                $newRowData['id_kelahiran'] = "{$prefix}-{$year}.{$number}";
+            }
+            
+            };
+        // $newRowData = array_merge($id,$newRowData);
         DB::table('kelahiran')->insert($newRowData);
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'create',
+            'table'       => 'kelahiran',
+            'primary_key' => $newRowData['id_kelahiran'],
+            'row'         => $newRowData
+        ]);
         $status;
         // if($newRowData['id_pkb'] != null){
         $jmlIb= DB::table('ib')->where('id_kejadian', $newRowData['id_kejadian'])->count();
@@ -80,8 +97,22 @@ class KelahiranController extends Controller
                 'status' => $status,
                 'updated_at' => new \DateTime()
             ]);
-    
-     
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'update',
+            'table'       => 'kejadian',
+            'primary_key' => 'id_kejadian',
+            'row'         => [
+                'id_kejadinan' =>$newRowData['id_kejadian'], 
+                'status' => $status,
+                'updated_at' => new \DateTime()]
+        ]);
+          if ($request->expectsJson()) {
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $newRowData
+            ]);
+        };
 
         return redirect('/kelahiran');
     }
@@ -113,7 +144,10 @@ class KelahiranController extends Controller
     public function edit(string $id)
     {
         //
-        $data = DB::table('kelahiran')->where('id_kelahiran', $id)->first();
+        $data = DB::table('kelahiran')->where('id_kelahiran', $id)
+                // ->join('kejadian','kejadian.id_kejadian','kelahiran.id_kejadian')
+                // ->join('peternak','kejadian.id_peternak','peternak.id_peternak')
+                ->first();
 
         return view('kelahiran.edit_kelahiran', compact('data'));
     }
@@ -128,6 +162,7 @@ class KelahiranController extends Controller
             'id_kejadian' => $request->kejadian,
             'id_staff' => $request->staff,
             'nama' => $request->nama,
+            'id_ticket' =>$request->ticket,
             'jenis_kelamin' => $request->kelamin,
             'keunggulan' => $request->keunggulan,
             'created_at' => $request->tanggal,
@@ -150,17 +185,42 @@ class KelahiranController extends Controller
         //     ]);
      
         // return redirect('/kelahiran');
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'update',
+            'table'       => 'kelahiran',
+            'primary_key' => 'id_kelahiran',
+            'row'         => array_merge(['id_kelahiran'=>$id],$newRowData)
+        ]);
+          if ($request->expectsJson()) {
 
+                return response()->json([
+                    'status' => 'success',
+                    'data' => $newRowData
+                ]);
+            };
         return redirect('/kejadian/show/'.$newRowData['id_kejadian']);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id, Request $request)
     {
        
         DB::table('kelahiran')->where('id_kelahiran', $id)->delete();
+          if ($request->expectsJson()) {
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $id
+            ]);
+        };
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'delete',
+            'table'       => 'kelahiran',
+            'primary_key' => 'id_kelahiran',
+            'row'         => ['id_kelahiran' => $id]
+        ]);
         return redirect('/kelahiran');
     }
 }

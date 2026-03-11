@@ -21,8 +21,10 @@
   <script src="{{asset('/vendor/home/purecounter/purecounter_vanilla.js')}}"></script>
   <script src="{{asset('/vendor/home/glightbox/js/glightbox.min.js')}}"></script>
   <script src="{{asset('/vendor/home/swiper/swiper-bundle.min.js')}}"></script>
-  <script src="{{ asset('/vendor/jquery/jquery.min.js')}}"></script>
-  <script src="{{ asset('/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+  <script src="{{asset('/vendor/jquery/jquery.min.js')}}"></script>
+  <script src="{{asset('/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+  <script src="{{ asset('/js/sb-admin-2.min.js')}}"></script>
+
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
   <!-- Core plugin JavaScript-->
   <script src="{{ asset('/vendor/jquery-easing/jquery.easing.min.js')}}"></script>

@@ -26,7 +26,7 @@
         <link
             href="{{asset('https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i')}}"
             rel="stylesheet">
-
+        link
         <!-- Custom styles for this template-->
         <script type="text/javascript" src="https://public.tableau.com/javascripts/api/tableau-2.min.js"></script>
         <style>
@@ -43,27 +43,25 @@
         <link rel="shortcut icon" href="{{asset('/img/Logo.png')}}" type="image/x-icon">    
         <link href="{{asset('/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
         <link href="{{asset('/css/sb-admin-2.min.css')}}" rel="stylesheet">
-
+        <link rel="stylesheet" href="https://cdn.datatables.net/2.3.6/css/dataTables.dataTables.css">
 
 </head>
 <body id="page-top">
     <div id="wrapper">
         @if(Auth::user()->role == 'peternak')
         @else
-        <aside class="w-64 bg-white shadow-md py-6 flex flex-col navbar-nav sidebar sidebar-dark accordion">
-            <h2 class="text-2xl font-bold text-blue-600 mb-6 pl-4">My App</h2>
+        <aside class=" bg-white shadow-md py-6 mr-10 flex flex-col navbar-nav sidebar sidebar-dark accordion toggled" id="accordionSidebar">
+            <!-- <h2 class="text-2xl font-bold text-blue-600 mb-6 pl-4"><a href="{{route('dashboard')}}">Home</a></h2> -->
             @include('layouts.sidebar')
         </aside>
         <div id="content-wrapper" class="d-flex flex-column">
             <div class="flex min-h-screen">    
                     <header>
-                        
                         @include('layouts/navbar')
                     </header>   
                 @endif
                 
-                        @yield('content')
-             
+                @yield('content')
             </div>
         </div>
     </div>
@@ -84,14 +82,14 @@
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                     <a class="btn btn-primary" href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
-                                                        document.getElementById('logout-form').submit();">
-                                                {{ __('Logout') }}
-                                            </a>
-                                            
-                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                                @csrf
-                                            </form>
+                        onclick="event.preventDefault();
+                                document.getElementById('logout-form').submit();">
+                        {{ __('Logout') }}
+                    </a>
+                    
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
                 </div>
             </div>
         </div>

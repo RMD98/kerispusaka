@@ -24,9 +24,16 @@ class PkbController extends Controller
     }
    
 
-    public function index()
+    public function index(Request $request)
     {
-        $data = DB::table('pkb')->get();
+        $data = DB::table('pkb')->paginate(10);
+          if ($request->expectsJson()) {
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ]);
+        };
         return view('pkb.pkb',compact('data'));
     }
 
@@ -50,6 +57,7 @@ class PkbController extends Controller
             'id_ib' => $request->ib,
             'no_dokumen' => $request->dokumen,
             'id_staff' => $request->staff,
+            'id_ticket' => $request->ticket,
             'hasil' => $request->status,
             'keterangan' => $request->keterangan,
             'created_at' => $request->tanggal,
@@ -78,22 +86,37 @@ class PkbController extends Controller
             $nextNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
             $newRowData['id_pkb'] = "{$prefix}-{$year}-{$nextNumber}";
         };
-        DB::table('pkb')->insert($newRowData);
-       
-        $statusToSet = null;
+        
         if (strtolower($newRowData['hasil']) === 'sukses') {
-            $statusToSet = 'PKB Berhasil';
+            $newRowData['hasil'] = 'PKB Berhasil';
         } elseif (strtolower($newRowData['hasil']) === 'gagal') {
-            $statusToSet = 'PKB Gagal';
-        }
-        if($statusToSet){
-            DB::table('ib')->where('id_ib',$newRowData['id_ib'])->update(['hasil'=>$statusToSet]);
+            $newRowData['hasil'] = 'PKB Gagal';
+        } 
+        DB::table('pkb')->insert($newRowData);
+
+        $statusToSet = $newRowData['hasil'];
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'create',
+            'table'       => 'pkb',
+            'primary_key' => $newRowData['id_pkb'],
+            'row'         => $newRowData
+        ]);
+        if($statusToSet != 'Belum Ada Tindakan'){
             DB::table('kejadian')->where('id_kejadian', $newRowData['id_kejadian'])
             ->update([
                 'status' => $statusToSet,
                 'updated_at' => Carbon::now(),
             ]);
         }
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'update',
+            'table'       => 'kejadian',
+            'primary_key' => 'id_kejadian',
+            'row'         => [
+                'id_kejadian'=>$newRowData['id_kejadian'], 
+                'status' => $statusToSet,
+                'updated_at' => Carbon::now(),]
+        ]);
 
         // return redirect('/pkb');
         return redirect('/kejadian/show/'.$newRowData['id_kejadian'])->with('success', 'Data PKB berhasil ditambahkan.');
@@ -131,7 +154,11 @@ class PkbController extends Controller
     public function edit(string $id)
     {
         
-        $data = DB::table('pkb')->where('id_pkb', $id)->first();
+        $data = DB::table('pkb')->where('id_pkb', $id)
+                ->join('kejadian','kejadian.id_kejadian','pkb.id_kejadian')
+                ->join('peternak','kejadian.id_peternak','peternak.id_peternak')
+                ->select('pkb.*', 'peternak.nama as nama')
+                ->first();
 
         return view('pkb.edit_pkb', compact('data'));
     }
@@ -161,19 +188,34 @@ class PkbController extends Controller
             'tanggal' => 'required|string|max:15',
         ]);
         
-        $statusToSet = null;
         if (strtolower($newRowData['hasil']) === 'sukses') {
-            $statusToSet = 'Inseminasi Buatan Berhasil';
+            $newRowData['hasil'] = 'PKB Berhasil';
         } elseif (strtolower($newRowData['hasil']) === 'gagal') {
-            $statusToSet = 'Inseminasi Buatan Gagal';}
+            $newRowData['hasil'] = 'PKB Gagal';}
+        $statusToSet = $newRowData['hasil'];
         DB::table('pkb')->where('id_pkb', $id)
             ->update($newRowData);
+            
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'update',
+            'table'       => 'pkb',
+            'primary_key' => 'id_pkb',
+            'row'         => array_merge(['id_pkb'=>$id],$newRowData),
+        ]);
         if($statusToSet){
-            DB::table('ib')->where('id_ib',$newRowData['id_ib'])->update(['hasil'=>$statusToSet]);
             DB::table('kejadian')->where('id_kejadian', $newRowData['id_kejadian'])
             ->update([
                 'status' => $statusToSet,
                 'updated_at' => new \DateTime()
+            ]);
+            fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+                'action'      => 'update',
+                'table'       => 'kejadian',
+                'primary_key' => 'id_kejadian',
+                'row'         => [
+                    'id_kejadian'=>$newRowData['id_kejadian'],
+                    'status' => $statusToSet,
+                    'updated_at' => new \DateTime()]
             ]);
         }
         return redirect('/pkb');
@@ -182,9 +224,22 @@ class PkbController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id,Request $request)
     {
         DB::table('pkb')->where('id_pkb', $id)->delete();
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+            'action'      => 'delete',
+            'table'       => 'pkb',
+            'primary_key' => 'id_pkb',
+            'row'         => ['id_pkb' => $id]
+        ]);
+        if ($request->expectsJson()) {
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ]);
+        };
         return redirect('/pkb');
     }
 }

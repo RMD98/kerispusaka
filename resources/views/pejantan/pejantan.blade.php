@@ -3,7 +3,12 @@
 <div class="bg-white w-full shadow rounded-2xl p-4">
     {{-- Card Header --}}
     <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-semibold text-gray-800">Daftar Sapi Jantan</h3>
+        <div>
+
+            <h3 class="text-xl font-semibold text-gray-800">Daftar Sapi Jantan</h3>
+            <x-breadcrumb />
+
+        </div>
         <a href="{{route('pejantan.create')}}"
            class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
             + Add Pejantan
@@ -50,6 +55,7 @@
             </tbody>
         </table>
     </div>
+        {{$data->links()}}
 </div>
 
 @stop

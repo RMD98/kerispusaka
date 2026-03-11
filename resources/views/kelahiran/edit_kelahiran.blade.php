@@ -3,7 +3,12 @@
 <div class="bg-white w-full shadow rounded-2xl p-4">
     {{-- Card Header --}}
     <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-semibold text-gray-800">Edit Kelahiran</h3>
+        <div>
+
+            <h3 class="text-xl font-semibold text-gray-800">Edit Kelahiran</h3>
+            <x-breadcrumb />
+
+        </div>
     </div>
 
     {{-- Table --}}
@@ -15,6 +20,12 @@
                     <label for="kejadian" class="block text-sm font-medium text-gray-700">Id Kejadian</label>
                     <input type="text" name="kejadian" id="kejadian" readonly value="{{$data->id_kejadian}}"
                     class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500" value="{{request()->route('id')}}">
+                </div>
+                <div>
+                    <label for="ticket" class="block text-sm font-medium text-gray-700">Ticket</label>
+                    <select id="ticket" name="ticket" class="w-full rounded-lg shadow-sm border border-gray-300">
+                        <option value="{{$data->id_ticket}}" selected>{{$data->id_ticket}} - {{$data->nama}}</option>
+                    </select>
                 </div>
                 <div>
                     <label for="staff" class="block text-sm font-medium text-gray-700">Petugas Penanggung Jawab</label>
@@ -144,6 +155,38 @@
                 },
                 cache: true
             },
+        });
+        $('#ticket').select2({
+            placeholder: 'Cari Ticket...',
+            minimumInputLength: 0,
+            ajax: {
+                url: '{{route('ticket.search')}}',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term // search input
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data.map(item => ({
+                            id: item.id_ticket,
+                            text: item.text,
+                            peternak: item.id_peternak,
+                            nama : item.nama,
+                        })),
+                    };
+                },
+                cache: true
+            },
+        });
+        $('#ticket').on('select2:select', function (e) {
+            let d = e.params.data;
+
+            $('#peternak').val(d.peternak);
+            // $('#no_hp').val(d.no_hp);
+            // $('#alamat').val(d.alamat);
         });
     });
 </script>

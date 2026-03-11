@@ -3,7 +3,10 @@
 <div class="bg-white w-full shadow rounded-2xl p-4">
     {{-- Card Header --}}
     <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-semibold text-gray-800">Daftar Petugas</h3>
+        <div>
+            <h3 class="text-xl font-semibold text-gray-800">Daftar Petugas</h3>
+            <x-breadcrumb />
+        </div>
         <a href="{{route('staff.create')}}"
            class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
             + Add Staff
@@ -33,7 +36,7 @@
                         <td class="px-4 py-2 border-b">{{ $value->asal }}</td>
                         <td class="px-4 py-2 border-b">
                             
-                            <a href="/edit_staff/{{$value->id_staff}}" class="text-blue-600 hover:underline">Edit</a>
+                            <a href="{{route('staff.edit', $value->id_staff)}}" class="text-blue-600 hover:underline">Edit</a>
                             |
                             <form action="{{ route('staff.destroy',$value->id_staff)}}" method="POST" class="inline">
                                 @csrf
@@ -49,6 +52,7 @@
             </tbody>
         </table>
     </div>
+        {{$data->links()}}
 </div>
 
 @stop
