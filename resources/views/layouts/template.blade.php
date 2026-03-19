@@ -1,5 +1,5 @@
 <head>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
     @if(Auth::user()->role == 'peternak')
         <link href="{{asset('/css/home-style.css')}}" rel="stylesheet">
         <link href="{{asset('/vendor/aos/aos.css')}}" rel="stylesheet">
@@ -19,14 +19,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="">
         <meta name="author" content="">
-
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
         <!-- Custom fonts for this template-->
         <link
             href="{{asset('https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i')}}"
             rel="stylesheet">
-        link
         <!-- Custom styles for this template-->
         <script type="text/javascript" src="https://public.tableau.com/javascripts/api/tableau-2.min.js"></script>
         <style>
@@ -43,22 +42,42 @@
         <link rel="shortcut icon" href="{{asset('/img/Logo.png')}}" type="image/x-icon">    
         <link href="{{asset('/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
         <link href="{{asset('/css/sb-admin-2.min.css')}}" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdn.datatables.net/2.3.6/css/dataTables.dataTables.css">
-
+        <!-- <link rel="stylesheet" href="https://cdn.datatables.net/2.3.6/css/dataTables.dataTables.css"> -->
+                <!-- Google Tag Manager -->
+        <!-- <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-M4BRZGFJ');</script>
+        End Google Tag Manager -->
 </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4SYQ7XMGCW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-4SYQ7XMGCW');
+</script>
 <body id="page-top">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M4BRZGFJ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <div id="wrapper">
         @if(Auth::user()->role == 'peternak')
         @else
-        <aside class=" bg-white shadow-md py-6 mr-10 flex flex-col navbar-nav sidebar sidebar-dark accordion toggled" id="accordionSidebar">
+        <!-- <aside class=" bg-white shadow py-6lex flex-col navbar-nav sidebar sidebar-dark accordion  toggled" id="accordionSidebar"> -->
             <!-- <h2 class="text-2xl font-bold text-blue-600 mb-6 pl-4"><a href="{{route('dashboard')}}">Home</a></h2> -->
             @include('layouts.sidebar')
-        </aside>
+        <!-- </aside> -->
         <div id="content-wrapper" class="d-flex flex-column">
-            <div class="flex min-h-screen">    
-                    <header>
-                        @include('layouts/navbar')
-                    </header>   
+            <header>
+               @include('layouts/navbar')
+           </header>  
+            <div class="flex min-h-screen" id="content">    
+                    
                 @endif
                 
                 @yield('content')

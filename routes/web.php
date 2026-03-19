@@ -70,8 +70,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/add_ticket',[TicketController::class,'store'])->name('ticket.store');
         Route::post('/update_status',[TicketController::class,'updateStatus'])->name('ticket.updateStatus');
         Route::get('/ticket/search',[TicketController::class,'search'])->name('ticket.search');
-
-        
+        Route::get('/ticket/statistics',[TicketController::class,'statistics'])->name('ticket.statistics');
+        Route::get('/ticket/pending',[TicketController::class,'pendingTicket'])->name('ticket.pending');
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -100,7 +100,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/add_ib/{id?}',[IbController::class,'store'])->name('ib.store');
         Route::get('/edit_ib/{id}',[IbController::class,'edit'])->name('ib.edit');
         Route::put('/update_ib/{id}',[IbController::class,'update'])->name('ib.update');
-        
+        Route::get('/ib/statistics',[IbController::class,'statistics'])->name('ib.statistics');
+
         Route::get('/pkb',[PkbController::class,'index'])->name('pkb.index');
         Route::get('/pkb/search',[PkbController::class,'search'])->name('pkb.search');
         Route::delete('/pkb/{id}',[PkbController::class,'destroy'])->name('pkb.destroy');

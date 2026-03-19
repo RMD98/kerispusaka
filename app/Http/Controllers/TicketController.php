@@ -177,6 +177,44 @@ class TicketController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
+    public function pendingTicket(){
+        $data = DB::table('ticket')
+                ->where('status','Pending')
+                ->join('staff','ticket.id_staff','=','staff.id_staff')
+                ->join('peternak','ticket.id_peternak','=','peternak.id_peternak')
+                ->select('ticket.*', 'peternak.nama as peternak', 'staff.nama as staff')->orderBy('ticket.id_ticket', 'desc')->get();
+        return response()->json($data);
+    }
+    public function statistics(){
+        $today = DB::table('ticket')->whereDate('created_at', Carbon::today())->count();
+        $count = DB::table('ticket')->count();
+        $selesai = DB::table('ticket')->where('status','Resolved')->count();
+        $results = DB::table('ticket')
+            ->selectRaw('MONTH(created_at) as month_num, COUNT(*) as total')
+            ->whereYear('created_at', date('Y'))
+            ->groupBy('month_num')
+            ->pluck('total', 'month_num');
+
+        // 2. Generate all 12 month labels and match them to the data
+        $labels = [];
+        $data = [];
+
+        for ($m = 1; $m <= 12; $m++) {
+            // Get month name (e.g., "January") using PHP's mktime
+            $labels[] = date('F', mktime(0, 0, 0, $m, 1));
+            
+            // Fill data with DB value or 0 if empty
+            $data[] = $results->get($m, 0);
+        }
+
+        return response()->json([
+            'labels' => $labels,
+            'data'   => $data,
+            'today' => $today,
+            'count' => $count,
+            'selesai' => $selesai,
+        ]);
+    }
     public function edit(string $id)
     {
         //

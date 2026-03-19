@@ -52,15 +52,7 @@ class IbController extends Controller
     public function store(Request $request)
     {
         //
-        $newRowData = [
-            'id_kejadian' => $request->kejadian,
-            'id_staff' => $request->staff,
-            'id_ticket' => $request->ticket,
-            'pejantan' => $request->pejantan,
-            'no_dokumen' => $request->dokumen,
-            'hasil' => $request->status,
-            'created_at' => $request->tanggal,
-        ];
+     
         
         $request->validate([
             'kejadian' => 'required|string|max:255',
@@ -70,24 +62,34 @@ class IbController extends Controller
             'tanggal' => 'required|string|max:15',
         ]);
 
-        $prefix = 'IB';
         $year = Carbon::now()->format('y.m');
-        $padLength = 4;
         $count = DB::table('ib')->count();
         if($count == 0){
-            $newRowData['id_ib'] = "{$prefix}-{$year}.001";
+           $id = '001';
         }else{
             $lastRow = DB::table('ib')->orderBy('id_ib', 'desc')->first();
             $lastId = $lastRow->id_ib;
-            if(substr($lastId,2,5)!=$year){
-                $id = ['id_ib' => "{$prefix}-{$year}.001"];
+            // dd(substr($lastId, strrpos($lastId,'-') +1,5));
+            if(substr($lastId, strrpos($lastId,'-') +1,5) != $year){
+                $id = '001';
             } else{
-                $number = sprintf("%03d",substr($lastId, 7)+1);
-                $id = ['id_ib' => "{$prefix}-{$year}.{$number}"];
+                
+                $number = explode('-', $lastId)[1];
+                $id = explode('.',$number)[2] + 1;
+                // $id = ['id_ib' => "{$prefix}-{$year}.{$number}"];
             }
-            $newRowData = array_merge($newRowData, $id);
             
         };
+           $newRowData = [
+            'id_ib' => "IB-{$year}.".sprintf('%03d', $id),
+            'id_kejadian' => $request->kejadian,
+            'id_staff' => $request->staff,
+            'id_ticket' => $request->ticket,
+            'pejantan' => $request->pejantan,
+            'no_dokumen' => $request->dokumen,
+            'hasil' => $request->status,
+            'created_at' => $request->tanggal,
+        ];
          if (strtolower($newRowData['hasil']) === 'sukses') {
             $newRowData['hasil'] = 'Inseminasi Buatan Berhasil';
         } elseif (strtolower($newRowData['hasil']) === 'gagal') {
@@ -162,6 +164,16 @@ class IbController extends Controller
         //
     }
 
+    public function statistics(){
+        $data = DB::table('ib')
+                ->selectRaw('hasil, Count(*) as total')
+                ->groupBy('hasil')
+                ->pluck('total','hasil');
+        return response()->json([
+            'labels' => $data->keys(),
+            'data' => $data->values(),
+        ]);
+    }
     /**
      * Show the form for editing the specified resource.
      */
