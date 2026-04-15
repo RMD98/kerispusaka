@@ -2,118 +2,143 @@
 @section('content')
 <div class="bg-white w-full shadow rounded-2xl p-4">
     {{-- Card Header --}}
-    <div class="flex items-center justify-between mb-4">
+    
+    <div class="">
         <div>
-
             <h3 class="text-xl font-semibold text-gray-800">Daftar Ticket</h3>
             <x-breadcrumb />
-
         </div>
-        <a href="{{route('ticket.create')}}"
-           class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
-            + Add Ticket
-        </a>
-    </div>
+        <div class="flex items-center justify-between mb-4">
+            <div class="search-box">
+                <input type="text" id="search" placeholder="Search..." class="border px-3 py-2 rounded">
+                <select id="per-page">
+                    <option value="5" {{ $perPage == 5 ? 'selected' : '' }}>5</option>
+                    <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
+                    <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
+                    <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
+                    <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
+                </select>  
+            </div>
+            <a href="{{route('ticket.create')}}"
+                class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
+                + Add Ticket
+            </a>
+            
+        </div>  
 
-    {{-- Table --}}
-    <div class="overflow-x-auto">
-        <table class="min-w-full text-sm text-left text-gray-700 border rounded">
-            <thead class="bg-gray-100 text-xs uppercase font-semibold text-gray-600">
-                <tr>
-                    <th class="px-4 py-2 border-b">#</th>
-                    <th class="px-4 py-2 border-b">Id</th>
-                    <th class="px-4 py-2 border-b">Id Pelapor</th>
-                    <th class="px-4 py-2 border-b">Pelapor</th>
-                    <th class="px-4 py-2 border-b">Jenis Laporan</th>
-                    <th class="px-4 py-2 border-b">Id Petugas</th>
-                    <th class="px-4 py-2 border-b">Petugas</th>
-                    <th class="px-4 py-2 border-b">Tanggal Laporan</th>
-                    <th class="px-4 py-2 border-b">Status</th>
-                    <th></th>
-                    <th class="px-4 py-2 border-b">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($data as $index => $value)
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-4 py-2 border-b">{{ $index + 1 }}</td>
-                        <td class="px-4 py-2 border-b">{{ $value->id_ticket }}</td>
-                        <td class="px-4 py-2 border-b">{{ $value->id_peternak }}</td>
-                        <td class="px-4 py-2 border-b">{{ $value->pelapor }}</td>
-                        <td class="px-4 py-2 border-b">{{ $value->jenis_laporan }}</td>
-                        <td class="px-4 py-2 border-b">{{ $value->id_staff }}</td>
-                        <td class="px-4 py-2 border-b">{{ $value->petugas }}</td>
-                        <td class="px-4 py-2 border-b">{{ $value->created_at }}</td>
-                        <td class="px-4 py-2 border-b">
-                            @if ($value->status == 'Pending') 
-                                <span class="text-yellow-500 font-semibold">Pending</span>
-                             @elseif ($value->status == 'In Progress') 
-                                <span class="text-blue-500 font-semibold">In Progress</span>
-                             @elseif ($value->status == 'Resolved') 
-                                <span class="text-green-500 font-semibold">Resolved</span>
-                             @elseif ($value->status == 'Closed') 
-                                <span class="text-gray-500 font-semibold">Closed</span>
-                            
-                            @endif
-                        </td>
-                        <td class="px-4 py-2 border-b">
-                            @if ($value->status == 'Pending') 
-                                <a href="#" onclick="updateStatus('{{$value->id_ticket}}','In Progress')" class="btn-secondary btn">Accept</a>
-                             @elseif ($value->status == 'In Progress') 
-                                <a href="#" onclick="updateStatus('{{$value->id_ticket}}','Resolved')" class="btn-success btn ">Done</a>
-                            @endif
-                        </td>
-                        <td class="px-4 py-2 border-b">
-                            <a href="{{route('ticket.edit', $value->id_ticket)}}" class="text-blue-600 hover:underline">Edit</a>
-                            |
-                            <form action="{{ route('ticket.destroy',$value->id_ticket)}}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" onclick="return confirm('Are you sure?')" class="text-red-600 hover:underline">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-                    <!-- <tr>
-                        <td colspan="4" class="px-4 py-4 text-center text-gray-500">No users found.</td>
-                    </tr> -->
-            </tbody>
-        </table>
+        <div id="table-container" class="overflow-x-auto">
+            @include('ticket.ticket_table', [
+                'data' => $data,
+                'sort' => $sort,
+                'direction' => $direction
+            ])
+        </div>
+        
     </div>
-        {{$data->links()}}
-
 </div>
-
 @stop
 @push('script')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>
-    function updateStatus(id, status) {
-        $.ajax({
-            url: "{{route('ticket.updateStatus')}}",
-            type: "POST",
-            data: {
-                id : id,
-                status: status,
-                _token: "{{ csrf_token() }}"
-            },
-            success: function(response) {
-                Swal.fire({
-                        icon: 'success',
-                        title: 'SUCCESS!',
-                        text: response.message ?? 'Status updated successfully!',
-                        showConfirmButton: false,
-                        timer: 2000
-                    });
-                setTimeout(function(){
-                        location.reload();
-                },1000);
-            },
-            error: function(xhr, status, error) {
-                console.error('Error updating status:', error);
-                alert('Failed to update status.');
+        const searchInput = document.getElementById('search');
+        const perPageSelect = document.getElementById('per-page');
+        const tableContainer = document.getElementById('table-container');
+        let debounceTimeout = null;
+
+        function loadTable(url) {
+            fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                tableContainer.innerHTML = html;
+            })
+            .catch(error => console.error(error));
+        }
+
+        function applyCurrentFilters(url) {
+            const currentSearch = searchInput.value.trim();
+            const currentPerPage = perPageSelect.value;
+
+            if (currentSearch !== '') {
+                url.searchParams.set('search', currentSearch);
+            } else {
+                url.searchParams.delete('search');
+            }
+
+            url.searchParams.set('per_page', currentPerPage);
+
+            return url;
+        }
+
+        // Live search
+        searchInput.addEventListener('keyup', function () {
+            clearTimeout(debounceTimeout);
+
+            debounceTimeout = setTimeout(() => {
+                const currentUrl = new URL(window.location.href);
+                applyCurrentFilters(currentUrl);
+                currentUrl.searchParams.set('page', 1);
+
+                window.history.pushState({}, '', currentUrl);
+                loadTable(currentUrl);
+            }, 300);
+        });
+
+        // Change per page
+        perPageSelect.addEventListener('change', function () {
+            const currentUrl = new URL(window.location.href);
+            applyCurrentFilters(currentUrl);
+            currentUrl.searchParams.set('page', 1);
+
+            window.history.pushState({}, '', currentUrl);
+            loadTable(currentUrl);
+        });
+
+        // Sort + Pagination
+        document.addEventListener('click', function (e) {
+            const link = e.target.closest('a[data-table-link]');
+
+            if (link) {
+                e.preventDefault();
+
+                const url = new URL(link.href);
+                applyCurrentFilters(url);
+
+                window.history.pushState({}, '', url);
+                loadTable(url);
+                return;
+            }
+
+            const editLink = e.target.closest('a[data-edit-link]');
+            if (editLink) {
+                sessionStorage.setItem('users_scroll_position', window.scrollY);
             }
         });
-    }
-</script>
+
+        // Browser back/forward
+        window.addEventListener('popstate', function () {
+            const currentUrl = new URL(window.location.href);
+
+            searchInput.value = currentUrl.searchParams.get('search') || '';
+            perPageSelect.value = currentUrl.searchParams.get('per_page') || '10';
+
+            loadTable(currentUrl);
+        });
+
+        // Restore scroll
+        window.addEventListener('load', function () {
+            const url = new URL(window.location.href);
+            const scroll = url.searchParams.get('scroll');
+
+            if (scroll) {
+                window.scrollTo({
+                    top: parseInt(scroll),
+                    behavior: 'smooth'
+                });
+                sessionStorage.removeItem('users_scroll_position');
+            }
+        });
+    </script>
+@endpush

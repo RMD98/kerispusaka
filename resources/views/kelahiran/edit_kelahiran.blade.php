@@ -42,11 +42,11 @@
                 </div>
                 
 
-                <div>
+                <!-- <div>
                     <label for="keunggulan" class="block text-sm font-medium text-gray-700">Keunggulan Sapi</label>
                     <input name="keunggulan" id="keunggulan" type="text"  placeholder="Keunggulan Sapi" required value="{{$data->keunggulan}}"
                            class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
+                </div> -->
                 
                 <div>
                     <label for="kelamin" class="block text-sm font-medium text-gray-700">Jenis Kelamin</label>
@@ -65,7 +65,7 @@
 
                 <div class="pt-4">
                     <button type="submit"
-                            class="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition">
+                            class="bg-blue-600 text-white px-3 py-2 rounded-xl hover:bg-blue-700 transition">
                         Update Kelahiran
                     </button>
                 </div>

@@ -119,7 +119,8 @@ class KejadianController extends Controller
             if(substr($lastId,strrpos($lastId,'-')+1,5)!=$year){
                 $id = ['id_kejadian' => "{$prefix}-{$year}.001"];
             } else{
-                $number = sprintf("%03d",substr($lastId, strrpos($lastId,'-')+5)+1);
+                $number = sprintf("%03d",substr($lastId, strrpos($lastId,'-')+7)+1);
+                
                 $id = ['id_kejadian' => "{$prefix}-{$year}.{$number}"];
             }
             $newRowData = array_merge($id,$newRowData);
@@ -181,11 +182,13 @@ class KejadianController extends Controller
         $betina = DB::table('betina')->where('ear_tag', $data->id_betina)->first();
         // dd($data);
         $ib = DB::table('ib')->where('id_kejadian', $id)->get();
+        $countib = DB::table('ib')->where('id_kejadian', $id)->count();
         $pkb = DB::table('pkb')->where('id_kejadian', $id)->get();
+        $countpkb = DB::table('pkb')->where('id_kejadian', $id)->count();
 
         $kelahiran = DB::table('kelahiran')->where('id_kejadian', $id)->get();
         
-        return view('kejadian.show_kejadian', compact('data','ib','pkb','peternak','betina','kelahiran'));
+        return view('kejadian.show_kejadian', compact('data','ib','countib','pkb','countpkb','peternak','betina','kelahiran'));
     }
 
     /**
@@ -237,6 +240,9 @@ class KejadianController extends Controller
     {
         //
         DB::table('kejadian')->where('id_kejadian', $id)->delete();
+        DB::table('ib')->where('id_kejadian', $id)->delete();
+        DB::table('pkb')->where('id_kejadian', $id)->delete();
+        DB::table('kelahiran')->where('id_kejadian', $id)->delete();
         fire_and_forget(env('SHEET_WEBHOOK_URL'), [
             'action'      => 'delete',
             'table'       => 'kejadian',

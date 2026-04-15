@@ -13,7 +13,10 @@ class PenyakitController extends Controller
      */
     public function index()
     {
-        $data = DB::table('penyakit')->get();
+        $data = DB::table('penyakit')
+                ->join('ticket', 'penyakit.id_ticket', 'ticket.id_ticket')
+                ->join('peternak', 'ticket.id_peternak','peternak.id_peternak')
+                ->get();
         //
         return view('penyakit.penyakit', compact('data'));
     }

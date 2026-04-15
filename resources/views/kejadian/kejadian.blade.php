@@ -25,6 +25,7 @@
                     <th class="px-4 py-2 border-b">#</th>
                     <th class="px-4 py-2 border-b">Peternak</th>
                     <th class="px-4 py-2 border-b">Betina</th>
+                    <th class="px-4 py-2 border-b">Status</th>
                     <th class="px-4 py-2 border-b">Hasil</th>
                     <th class="px-4 py-2 border-b">Tanggal Bibuat</th>
                     <th class="px-4 py-2 border-b">Tanggal Diperbarui</th>
@@ -38,6 +39,7 @@
                         <td class="px-4 py-2 border-b">{{ $value->id_peternak }}</td>
                         <td class="px-4 py-2 border-b">{{ $value->id_betina }}</td>
                         <td class="px-4 py-2 border-b">{{ $value->status }}</td>
+                        <td class="px-4 py-2 border-b">{{ $value->hasil }}</td>
                         <td class="px-4 py-2 border-b">{{ $value->created_at }}</td>
                         <td class="px-4 py-2 border-b">{{ $value->updated_at }}</td>
                         <td class="px-4 py-2 border-b">

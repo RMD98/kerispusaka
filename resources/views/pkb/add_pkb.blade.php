@@ -79,7 +79,7 @@
 
                 <div class="pt-4">
                     <button type="submit"
-                            class="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition">
+                            class="bg-blue-600 text-white px-3 py-2 rounded-xl hover:bg-blue-700 transition">
                         Save PKB
                     </button>
                 </div>
@@ -183,7 +183,7 @@ $(document).ready(function() {
                 return {
                     q: params.term,
                     kejadian : $('#kejadian').val(),
-                    jenis:'PKB', // search input
+                    jenis:'Kebuntingan', // search input
                 };
             },
             processResults: function (data) {

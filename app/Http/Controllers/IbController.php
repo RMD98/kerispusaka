@@ -80,6 +80,7 @@ class IbController extends Controller
             }
             
         };
+        $ib = DB::table('ib')->where('id_kejadian', $request->kejadian)->count();
            $newRowData = [
             'id_ib' => "IB-{$year}.".sprintf('%03d', $id),
             'id_kejadian' => $request->kejadian,
@@ -87,14 +88,15 @@ class IbController extends Controller
             'id_ticket' => $request->ticket,
             'pejantan' => $request->pejantan,
             'no_dokumen' => $request->dokumen,
-            'hasil' => $request->status,
+            'hasil' => 'Telah dilakukan Inseminasi Buatan',
+            'status_tindakan' => 'Tindakan Ke-'.($ib+1),
             'created_at' => $request->tanggal,
         ];
-         if (strtolower($newRowData['hasil']) === 'sukses') {
-            $newRowData['hasil'] = 'Inseminasi Buatan Berhasil';
-        } elseif (strtolower($newRowData['hasil']) === 'gagal') {
-            $newRowData['hasil'] = 'Inseminasi Buatan Gagal';}
-        $statusToSet = $newRowData['hasil'];
+        //  if (strtolower($newRowData['hasil']) === 'sukses') {
+        //     $newRowData['hasil'] = 'Inseminasi Buatan Berhasil';
+        // } elseif (strtolower($newRowData['hasil']) === 'gagal') {
+        //     $newRowData['hasil'] = 'Inseminasi Buatan Gagal';}
+        // $statusToSet = $newRowData['hasil'];
 
         DB::table('ib')->insert($newRowData);
         fire_and_forget(env('SHEET_WEBHOOK_URL'), [
@@ -103,10 +105,10 @@ class IbController extends Controller
             'primary_key' => $newRowData['id_ib'],
             'row'         => $newRowData
         ]);
-       
+       $count = DB::table('ib')->where('id_kejadian',$newRowData['id_kejadian'])->count();
         DB::table('kejadian')->where('id_kejadian', $newRowData['id_kejadian'])
             ->update([
-                'status' => $statusToSet,
+                'status' => 'Tindakan IB ke'.$count,
                 'updated_at' => new \DateTime()
             ]);
           if ($request->expectsJson()) {
@@ -123,7 +125,7 @@ class IbController extends Controller
         'primary_key' => 'id_kejadian',
         'row'         => [
             'id_kejadian' => $newRowData['id_kejadian'], 
-            'status' => $statusToSet,
+            'status' => 'Tindakan IB ke'.$count,
             'updated_at' => new \DateTime()
             ],
         ]);

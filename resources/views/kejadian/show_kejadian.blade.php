@@ -76,8 +76,9 @@
     <hr class="my-4 border-t-2 border-gray-400">
     <div class="flex items-center justify-between mb-4">
         <h3 class="text-xl font-semibold text-gray-800">Data Inseminasi Buatan</h3>
-        <a href="{{route('ib.create',$data->id_kejadian)}}"
-           class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
+        <a href="{{ $countib < 3 ? route('ib.create', $data->id_kejadian) : '#' }}"
+           class="{{$countib < 3 ? 'bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition' : 'bg-gray-400 text-gray-600 px-4 py-2 rounded-xl cursor-not-allowed' }}"
+           >
             + Add Inseminasai
         </a>
     </div>
@@ -130,8 +131,8 @@
     <hr class="my-4 border-t-2 border-gray-400">
     <div class="flex items-center justify-between mb-4">
         <h3 class="text-xl font-semibold text-gray-800">Data Pengecekan Kebuntingan</h3>
-        <a href="{{route('pkb.create',$data->id_kejadian)}}"
-           class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
+        <a href="{{$countpkb < 3 ? route('pkb.create',$data->id_kejadian) : '#'}}"
+           class="{{$countpkb < 3 ? 'bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition' : 'bg-gray-400 text-gray-600 px-4 py-2 rounded-xl cursor-not-allowed' }}">
             + Add PKB
         </a>
     </div>
@@ -188,8 +189,8 @@
     <hr class="my-4 border-t-2 border-gray-400">
     <div class="flex items-center justify-between mb-4">
         <h3 class="text-xl font-semibold text-gray-800">Data Kelahiran</h3>
-        <a href="{{route('kelahiran.create',$data->id_kejadian)}}"
-           class="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
+        <a href="{{$data->hasil != 'Gagal' ? route('kelahiran.create',$data->id_kejadian) : '#'}}"
+           class="{{$data->hasil != 'Gagal' ? 'bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition' : 'bg-gray-400 text-gray-600 px-4 py-2 rounded-xl cursor-not-allowed' }}">
             + Add Kelahiran
         </a>
     </div>

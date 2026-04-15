@@ -178,9 +178,9 @@
                     <th class="px-4 py-2 border-b">Petugas</th>
                     <!-- <th class="px-4 py-2 border-b">PKB</th> -->
                     <th class="px-4 py-2 border-b">Status</th>
-                    <th class="px-4 py-2 border-b">Keunggulan</th>
+                    <th class="px-4 py-2 border-b">Nama</th>
+                    <th class="px-4 py-2 border-b">Jenis Kelamin</th>
                     <th class="px-4 py-2 border-b">Tanggal Dibuat</th>
-                    <th class="px-4 py-2 border-b">Tanggal Diperbarui</th>
                 </tr>
             </thead>
             <tbody>
@@ -190,9 +190,9 @@
                         <td class="px-4 py-2 border-b">{{ $value->id_staff }}</td>
                         <!-- <td class="px-4 py-2 border-b">{ $value->id_pkb }}</td> -->
                         <td class="px-4 py-2 border-b">{{ $data->status }}</td>
-                        <td class="px-4 py-2 border-b">{{ $value->keunggulan }}</td>
+                        <td class="px-4 py-2 border-b">{{ $value->nama }}</td>
+                        <td class="px-4 py-2 border-b">{{ $value->jenis_kelamin }}</td>
                         <td class="px-4 py-2 border-b">{{ $value->created_at }}</td>
-                        <td class="px-4 py-2 border-b">{{ $value->updated_at }}</td>
                     </tr>
                 @endforeach
                     <!-- <tr>

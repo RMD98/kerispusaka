@@ -68,6 +68,11 @@
                     </div>
                     
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('penyakit.index')}}">
+                        <i class="fas fa-fw fa-virus"></i>
+                    <span>Penyakit</span></a>
+                </li>
                 
                 <!-- Nav Item - Utilities Collapse Menu -->
                 <li class="nav-item">
@@ -108,8 +113,6 @@
                     <i class="fa fa-fw fa-mars"></i>
                     <span>Pejantan</span></a>
                 </li>
-            <!-- Nav Item - Pages Collapse Menu -->
-            <!-- Nav Item - Charts -->
             
             
             <!-- Divider -->

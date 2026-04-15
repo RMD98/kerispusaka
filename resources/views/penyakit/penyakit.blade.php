@@ -37,6 +37,7 @@
                         <td class="px-4 py-2 border-b">{{ $index + 1 }}</td>
                         <td class="px-4 py-2 border-b">{{ $value->id_penyakit }}</td>
                         <td class="px-4 py-2 border-b">{{ $value->id_ticket }}</td>
+                        <td class="px-4 py-2 border-b">{{ $value->id_peternak }}</td>
                         <td class="px-4 py-2 border-b">{{ $value->id_sapi }}</td>
                         <td class="px-4 py-2 border-b">{{ $value->keterangan }}</td>
                         <td class="px-4 py-2 border-b">{{ $value->created_at }}</td>

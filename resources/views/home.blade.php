@@ -196,12 +196,14 @@
               type:'GET',
               dataType:'json',
               success:function(response){
-                if(response>=3){
+                if(response[activeService] >= 1) {
+                  // console.log(response[activeService]);  
+                  // console.log(activeService);
                   // alert('Maaf, Anda telah mencapai batas maksimal 3 laporan per hari. Silakan coba lagi besok.');
                     Swal.fire({
                         icon: 'error',
                         title: 'ERROR!',
-                        text: response.message ?? 'Maaf, Anda telah mencapai batas maksimal 3 laporan per hari. Silakan coba lagi besok.',
+                        text: response.message ?? 'Maaf, Anda telah mencapai batas maksimal laporan ' + activeService + ' per hari. Silakan coba lagi besok.',
                         showConfirmButton: false,
                         timer: 2000
                     });

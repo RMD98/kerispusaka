@@ -16,6 +16,11 @@
     <form action="{{route('ticket.update', $data->id_ticket)}}" method="POST" class="flex-1 overflow-auto space-y-6">
                 @csrf
                 @method('POST')
+                <input type="hidden" name="page" value="{{ request('page') }}">
+                <input type="hidden" name="search" value="{{ request('search') }}">
+                <input type="hidden" name="sort" value="{{ request('sort') }}">
+                <input type="hidden" name="direction" value="{{ request('direction') }}">
+                <input type="hidden" name="per_page" value="{{ request('per_page', 10) }}">
                 <div>
                     <label for="staff" class="block text-sm font-medium text-gray-700">Petugas Penanggung Jawab</label>
                     <select id="staff" name="staff" class="w-full rounded-lg shadow-sm border border-gray-300">
@@ -26,28 +31,29 @@
                     <label for="peternak" class="block text-sm font-medium text-gray-700">Pelapor</label>
                     <select id="peternak" name="peternak" class="w-full rounded-lg shadow-sm border border-gray-300">
                         <!-- Options loaded by AJAX -->
-                         <option value="{{$data->id_peternak}}" selected>{{$data->peternak}}</option>
+                        <option value="{{$data->id_peternak}}" selected>{{$data->peternak}}</option>
                     </select>
                 </div>               
                 <div>
                     <label for="jenis" class="block text-sm font-medium text-gray-700">Jenis Laporan</label>
                     <select name="jenis" id="jenis" required
-                           class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
+                        class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
                             <option {{$data->jenis_laporan == 'Admin' ? 'selected' :''}} value="Admin">Admin</option>
                             <option {{$data->jenis_laporan == 'IB' ? 'selected' :''}} value="IB">IB</option>
                             <option {{$data->jenis_laporan == 'Kebuntingan' ? 'selected' :''}} value="Kebuntingan">Kebuntingan</option>
+                            <option {{$data->jenis_laporan == 'Kelahiran' ? 'selected' :''}} value="Kelahiran">Kelahiran</option>
                             <option {{$data->jenis_laporan == 'Penyakit' ? 'selected' :''}} value="Penyakit">Penyakit</option>
                     </select>
                 </div>
                 <div>
                     <label for="tanggal" class="block text-sm font-medium text-gray-700">Tanggal Laporan</label>
                     <input type="datetime-local" name="tanggal" id="tanggal" value="{{date('Y-m-d\TH:i', strtotime($data->created_at))}}" required
-                           class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 bg-gray-100 focus:ring-blue-500 focus:border-blue-500">
+                        class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 bg-gray-100 focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>
                     <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
                     <select name="status" id="status" required
-                           class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
+                        class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
                             <option value="Pending" {{$data->status == 'Pending' ? 'selected' :''}}>Laporan Diterima</option>
                             <option value="In Progress" {{$data->status == 'In Progress' ? 'selected' :''}}>Dalam Proses</option>
                             <option value="Resolved" {{$data->status == 'Resolved' ? 'selected' :''}}>Selesai</option>
@@ -55,7 +61,7 @@
                 </div>
                 <div class="pt-4">
                     <button type="submit"
-                            class="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition">
+                            class="bg-blue-600 text-white px-3 py-2 rounded-xl hover:bg-blue-700 transition">
                         Update Ticket
                     </button>
                 </div>

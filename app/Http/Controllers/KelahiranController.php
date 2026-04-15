@@ -45,7 +45,7 @@ class KelahiranController extends Controller
             'nama' => $request->nama,
             'id_ticket' => $request->ticket,
             'jenis_kelamin' => $request->kelamin,
-            'keunggulan' => $request->keunggulan,
+            // 'keunggulan' => $request->keunggulan,
             'created_at' => $request->tanggal,
         ];
         
@@ -54,7 +54,7 @@ class KelahiranController extends Controller
             'staff' => 'required|string|max:255',
             'nama' => 'required|string|max:255',
             'kelamin' => 'required|string|max:255',
-            'keunggulan' => 'required|string|max:255',
+            // 'keunggulan' => 'required|string|max:255',
             'tanggal' => 'required|string|max:15',
         ]);
             
@@ -87,7 +87,8 @@ class KelahiranController extends Controller
         // if($newRowData['id_pkb'] != null){
         $jmlIb= DB::table('ib')->where('id_kejadian', $newRowData['id_kejadian'])->count();
         if($jmlIb != 0){
-            $status = 'Kelaiharn Pada IB ke-'.$jmlIb;
+            $status = 'Kelahiran Pada IB ke-'.$jmlIb;
+            $hasil = 'Berhasil';
         } else{
             $status = 'Kelahiran Alami';
         }
@@ -95,6 +96,7 @@ class KelahiranController extends Controller
         DB::table('kejadian')->where('id_kejadian', $newRowData['id_kejadian'])
             ->update([
                 'status' => $status,
+                'hasil' => $hasil ?? 'Belum Ada Hasil',
                 'updated_at' => new \DateTime()
             ]);
         fire_and_forget(env('SHEET_WEBHOOK_URL'), [
@@ -104,6 +106,7 @@ class KelahiranController extends Controller
             'row'         => [
                 'id_kejadinan' =>$newRowData['id_kejadian'], 
                 'status' => $status,
+                'hasil' => $hasil ?? 'Belum Ada Hasil',
                 'updated_at' => new \DateTime()]
         ]);
           if ($request->expectsJson()) {
@@ -164,7 +167,7 @@ class KelahiranController extends Controller
             'nama' => $request->nama,
             'id_ticket' =>$request->ticket,
             'jenis_kelamin' => $request->kelamin,
-            'keunggulan' => $request->keunggulan,
+            // 'keunggulan' => $request->keunggulan,
             'created_at' => $request->tanggal,
         ];
         
@@ -173,7 +176,7 @@ class KelahiranController extends Controller
             'staff' => 'required|string|max:255',
             'nama' => 'required|string|max:255',
             'kelamin' => 'required|string|max:255',
-            'keunggulan' => 'required|string|max:255',
+            // 'keunggulan' => 'required|string|max:255',
             'tanggal' => 'required|string|max:15',
         ]);
         DB::table('kelahiran')->where('id_kelahiran', $id)

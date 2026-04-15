@@ -90,7 +90,7 @@ class PejantanController extends Controller
             'id_pembuatan' => $request->pembuatan,
             'jenis_straw' => $request->jenis,
             'asal_straw' => $request->asal,
-            'persentase' => $request->persentase,
+            // 'persentase' => $request->persentase,
             'created_at' => Carbon::now(),
         ];
         
@@ -99,7 +99,7 @@ class PejantanController extends Controller
             'pembuatan' => 'required|string|max:255',
             'jenis' => 'required|string|max:255',
             'asal' => 'required|string|max:255',
-            'persentase' => 'required|numeric|min:0|max:100',
+            // 'persentase' => 'required|numeric|min:0|max:100',
         ]);
         
         // $prefix = 'JANTAN';
@@ -179,7 +179,7 @@ class PejantanController extends Controller
             'id_pembuatan' => $request->pembuatan,
             'jenis_straw' => $request->jenis,
             'asal_straw' => $request->asal,
-            'persentase' => $request->persentase,
+            // 'persentase' => $request->persentase,
             'created_at' => Carbon::now(),
         ];
         
@@ -189,7 +189,7 @@ class PejantanController extends Controller
             'pembuatan' => 'required|string|max:255',
             'jenis' => 'required|string|max:255',
             'asal' => 'required|string|max:255',
-            'persentase' => 'required|numeric|min:0|max:100',
+            // 'persentase' => 'required|numeric|min:0|max:100',
         ]);
         
         DB::table('pejantan')->where('id_pejantan',$id)->update($newRowData);

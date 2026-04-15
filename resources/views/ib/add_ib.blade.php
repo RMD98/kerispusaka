@@ -56,11 +56,11 @@
                     <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
                     <!-- <input type="text" name="status" id="status"
                     class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500" value ="Belum Ada Tindakan"> -->
-                    <select id="status" name="status" class="w-full rounded-lg shadow-sm border border-gray-300">
-                        <option value="Belum Ada Tindakan">Belum Ada Tindakan</option>
-                        <option value="Belum Ada Hasil">Belum Ada Hasil</option>
+                    <select id="status" readonly name="status" class="w-full rounded-lg shadow-sm border border-gray-300">
+                        <option value="Telah Dilakukan Tindakan">Telah Dilakukan Tindakan</option>
+                        <!-- <option value="Belum Ada Hasil">Belum Ada Hasil</option>
                         <option value="sukses">Inseminasi Berhasil</option>
-                        <option value="gagal">Inseminasi Gagal</option>
+                        <option value="gagal">Inseminasi Gagal</option> -->
                     </select>
                 </div>
                 <div>
@@ -77,7 +77,7 @@
 
                 <div class="pt-4">
                     <button type="submit"
-                            class="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition">
+                            class="bg-blue-600 text-white px-3 py-2 rounded-xl hover:bg-blue-700 transition">
                         Save IB
                     </button>
                 </div>

@@ -86,11 +86,17 @@ class PkbController extends Controller
             $nextNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
             $newRowData['id_pkb'] = "{$prefix}-{$year}-{$nextNumber}";
         };
-        
+        $statusIB;
+        $count = DB::table('ib')->where('id_kejadian',$newRowData['id_kejadian'])->count();
         if (strtolower($newRowData['hasil']) === 'sukses') {
-            $newRowData['hasil'] = 'PKB Berhasil';
+            $newRowData['hasil'] = 'Berhasil';
+            $statusIB = 'IB Berhasil';
         } elseif (strtolower($newRowData['hasil']) === 'gagal') {
-            $newRowData['hasil'] = 'PKB Gagal';
+            $newRowData['hasil'] = 'Gagal';
+            $statusIB = 'IB Gagal';
+            if($count == 3){
+                $hasil = 'Gagal';
+            }
         } 
         DB::table('pkb')->insert($newRowData);
 
@@ -104,7 +110,12 @@ class PkbController extends Controller
         if($statusToSet != 'Belum Ada Tindakan'){
             DB::table('kejadian')->where('id_kejadian', $newRowData['id_kejadian'])
             ->update([
-                'status' => $statusToSet,
+                'status' => 'IB ke -'.$count.' '.$statusToSet,
+                'hasil' => $hasil ?? '',
+                'updated_at' => Carbon::now(),
+            ]);
+            DB::table('ib')->where('id_ib', $newRowData['id_ib'])->update([
+                'hasil' => $statusIB,
                 'updated_at' => Carbon::now(),
             ]);
         }
@@ -115,6 +126,7 @@ class PkbController extends Controller
             'row'         => [
                 'id_kejadian'=>$newRowData['id_kejadian'], 
                 'status' => $statusToSet,
+                'hasil' => $hasil ?? '',
                 'updated_at' => Carbon::now(),]
         ]);
 
@@ -187,11 +199,20 @@ class PkbController extends Controller
             'status' => 'required|string|max:255',
             'tanggal' => 'required|string|max:15',
         ]);
-        
+        $statusIB;
+        $count = DB::table('ib')->where('id_kejadian',$newRowData['id_kejadian'])->count();
+
         if (strtolower($newRowData['hasil']) === 'sukses') {
-            $newRowData['hasil'] = 'PKB Berhasil';
+            $newRowData['hasil'] = 'Berhasil';
+            $statusIB = 'IB Berhasil';
         } elseif (strtolower($newRowData['hasil']) === 'gagal') {
-            $newRowData['hasil'] = 'PKB Gagal';}
+            $newRowData['hasil'] = 'Gagal';
+            $statusIB = 'IB Gagal';
+             if($count == 3){
+                $hasil = 'Gagal';
+            }
+            
+        }
         $statusToSet = $newRowData['hasil'];
         DB::table('pkb')->where('id_pkb', $id)
             ->update($newRowData);
@@ -206,6 +227,12 @@ class PkbController extends Controller
             DB::table('kejadian')->where('id_kejadian', $newRowData['id_kejadian'])
             ->update([
                 'status' => $statusToSet,
+                'hasil' => $hasil ?? 'Belum Ada Hasil',
+                'updated_at' => new \DateTime()
+            ]);
+            DB::table('ib')->where('id_ib', $newRowData['id_ib'])
+            ->update([
+                'status' => $statusIB,
                 'updated_at' => new \DateTime()
             ]);
             fire_and_forget(env('SHEET_WEBHOOK_URL'), [
@@ -215,6 +242,7 @@ class PkbController extends Controller
                 'row'         => [
                     'id_kejadian'=>$newRowData['id_kejadian'],
                     'status' => $statusToSet,
+                    'hasil' => $hasil ?? 'Belum Ada Hasil',
                     'updated_at' => new \DateTime()]
             ]);
         }

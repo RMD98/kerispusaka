@@ -39,14 +39,14 @@
                 <input type="text" name="asal" id="asal" required
                        class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
             </div>
-            <div>
+            <!-- <div>
                 <label for="persentase" class="block text-sm font-medium text-gray-700">Persentase</label>
                 <input type="number" name="persentase" id="persentase" required
                        class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
-            </div>
+            </div> -->
             <div class="pt-4">
                 <button type="submit"
-                        class="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition">
+                        class="bg-blue-600 text-white px-3 py-2 rounded-xl hover:bg-blue-700 transition">
                     Save Pejantan
                 </button>
             </div>

@@ -12,33 +12,78 @@ class TicketController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        //
-        // $test = DB::table('ticket')->get();
-        // dd($test);
-        if(auth()->user()->role == 'super admin'){
-            $data = DB::table('ticket')
-                    ->join('staff','ticket.id_staff','staff.id_staff')
-                    ->join('peternak','peternak.id_peternak','ticket.id_peternak')
-                    ->select('ticket.*', 'peternak.nama as pelapor', 'staff.nama as petugas')->orderBy('ticket.id_ticket', 'desc')->paginate(10);
-        }else{
+    // {
+    //     //
+    //     // $test = DB::table('ticket')->get();
+    //     // dd($test);
+    //     if(auth()->user()->role == 'super admin'){
+    //         $data = DB::table('ticket')
+    //                 ->join('staff','ticket.id_staff','staff.id_staff')
+    //                 ->join('peternak','peternak.id_peternak','ticket.id_peternak')
+    //                 ->select('ticket.*', 'peternak.nama as pelapor', 'staff.nama as petugas')->orderBy('ticket.id_ticket', 'desc')->paginate(10);
+    //     }else{
             
-            $data = DB::table('ticket')
-                    ->where('ticket.id_staff',auth()->user()->id_user)
-                    ->join('staff','ticket.id_staff','staff.id_staff')
-                    ->join('peternak','peternak.id_peternak','ticket.id_peternak')
-                    ->select('ticket.*', 'peternak.nama as pelapor', 'staff.nama as petugas')->orderBy('ticket.id_ticket', 'desc')->paginate(10);
-        }
-        // dd($data);
-        if ($request->expectsJson()) {
+    //         $data = DB::table('ticket')
+    //                 ->where('ticket.id_staff',auth()->user()->id_user)
+    //                 ->join('staff','ticket.id_staff','staff.id_staff')
+    //                 ->join('peternak','peternak.id_peternak','ticket.id_peternak')
+    //                 ->select('ticket.*', 'peternak.nama as pelapor', 'staff.nama as petugas')->orderBy('ticket.id_ticket', 'desc')->paginate(10);
+    //     }
+    //     // dd($data);
+    //     if ($request->expectsJson()) {
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $data
-            ]);
-        };
-        return view('ticket.ticket',compact('data'));
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'data' => $data
+    //         ]);
+    //     };
+    //     return view('ticket.ticket',compact('data'));
+    // }
+    {
+        $query = DB::table('ticket')->join('peternak','ticket.id_peternak','peternak.id_peternak')
+                    ->join('staff','ticket.id_staff','staff.id_staff');
+        
+        // live search
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('id_ticket', 'like', "%{$search}%")
+                    ->orWhere('peternak.nama', 'like', "%{$search}%")
+                    ->orWhere('staff.nama', 'like', "%{$search}%");
+            });
+        }
+        $sort = $request->get('sort', 'id_ticket');
+        $direction = $request->get('direction', 'desc');
+
+        $allowedSorts = ['id_ticket','id_peternak', 'pelapor','id_staff', 'petugas', 'created_at'];
+
+        if (!in_array($sort, $allowedSorts)) {
+            $sort = 'id_ticket';
+        }
+
+        if (!in_array($direction, ['asc', 'desc'])) {
+            $direction = 'desc';
+        }
+        $perPage = (int) $request->get('per_page', 10);
+        $allowedPerPage = [5, 10, 25, 50, 100];
+
+        if (!in_array($perPage, $allowedPerPage)) {
+            $perPage = 10;
+        }
+        $data = $query->orderBy($sort, $direction)
+                ->select('ticket.*', 'peternak.nama as pelapor', 'staff.nama as petugas')
+                ->paginate($perPage)
+                ->appends($request->query());
+
+        // jika request AJAX, return partial table saja
+        if ($request->ajax()) {
+            return view('ticket.ticket_table', compact('data','sort','direction','perPage'))->render();
+        }
+
+        return view('ticket.ticket', compact('data','sort','direction','perPage'));
     }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -116,9 +161,20 @@ class TicketController extends Controller
     public function checklimit(string $id)
     {
         //
-        $data = DB::table('ticket')->where('id_peternak', $id)->whereDate('created_at',Carbon::today())->count();
+        $data = DB::table('ticket')->where('id_peternak', $id)->whereDate('created_at',Carbon::today())->where('jenis_laporan','Penyakit' )->count();
+        $ib = DB::table('ticket')->where('id_peternak', $id)->whereDate('created_at',Carbon::today())->where('jenis_laporan','IB' )->count();
+        $admin = DB::table('ticket')->where('id_peternak', $id)->whereDate('created_at',Carbon::today())->where('jenis_laporan','Admin' )->count();
+        $pkb = DB::table('ticket')->where('id_peternak', $id)->whereDate('created_at',Carbon::today())->where('jenis_laporan','PKB' )->count();
+        $kelahiran = DB::table('ticket')->where('id_peternak', $id)->whereDate('created_at',Carbon::today())->where('jenis_laporan','Kelahiran' )->count();
+        $penyakit = DB::table('ticket')->where('id_peternak', $id)->whereDate('created_at',Carbon::today())->where('jenis_laporan','Penyakit' )->count();
         // dd($data);
-        return response()->json($data);
+        return response()->json([
+            'IB' => $ib,
+            'Admin' => $admin,
+            'PKB' => $pkb,
+            'Kelahiran' => $kelahiran,
+            'Penyakit' => $penyakit
+        ]);
     }
     public function updateStatus(Request $request)
     {
@@ -185,7 +241,8 @@ class TicketController extends Controller
                 ->select('ticket.*', 'peternak.nama as peternak', 'staff.nama as staff')->orderBy('ticket.id_ticket', 'desc')->get();
         return response()->json($data);
     }
-    public function statistics(){
+    public function statistics()
+    {
         $today = DB::table('ticket')->whereDate('created_at', Carbon::today())->count();
         $count = DB::table('ticket')->count();
         $selesai = DB::table('ticket')->where('status','Resolved')->count();
@@ -215,7 +272,7 @@ class TicketController extends Controller
             'selesai' => $selesai,
         ]);
     }
-    public function edit(string $id)
+    public function edit(string $id, Request $request)
     {
         //
         $data = DB::table('ticket')->where('id_ticket',$id)
@@ -249,11 +306,14 @@ class TicketController extends Controller
         ];
 
         DB::table('ticket')->where('id_ticket',$id)->update($data);
-         fire_and_forget(env('SHEET_WEBHOOK_URL'), [
+        fire_and_forget(env('SHEET_WEBHOOK_URL'), [
             'action'      => 'update',
             'table'       => 'ticket',
             'primary_key' => 'id_ticket',
             'row'         => array_merge(['id_ticket'=>$id],$data),
+        ]);
+        $queryParam = $request->only([
+            'page','sort','direction','search','per_page'
         ]);
         if ($request->expectsJson()) {
 
@@ -262,7 +322,7 @@ class TicketController extends Controller
                 'data' => $data
             ]);
         };
-        return redirect()->route('ticket.index')->with('success','Ticket berhasil diupdate');
+        return redirect()->route('ticket.index',$queryParam)->with('success','Ticket berhasil diupdate');
     }
 
     /**
